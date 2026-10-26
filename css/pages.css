@@ -1,0 +1,513 @@
+/* 페이지별 스타일: 히어로, 메인 랜딩, MOOD 선택, 준비 중 페이지 */
+
+/* ---------- 공통 히어로 (텍스트 왼쪽 + 장식 오른쪽 위) ---------- */
+
+.hero {
+  position: relative;
+  background: var(--color-hero-bg);
+  overflow: hidden;
+}
+
+.hero__art {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(40.5%, 621px);
+}
+
+.hero__inner {
+  position: relative;
+  max-width: 1536px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 3.85vw, 59px);
+}
+
+.hero__title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: -0.01em;
+}
+
+.hero__lead {
+  color: var(--color-text);
+}
+
+/* ---------- MOOD 페이지 히어로 (시안 기준) ---------- */
+
+.hero--mood .hero__inner {
+  min-height: min(17.2vw, 263px);
+  padding-top: clamp(28px, 3.6vw, 56px);
+  padding-bottom: 28px;
+}
+
+.hero--mood .hero__title {
+  margin-top: 14px;
+  font-size: clamp(30px, 3.3vw, 51px);
+  line-height: 1.3;
+}
+
+.hero--mood .hero__lead {
+  margin-top: 10px;
+  font-size: clamp(16px, 1.6vw, 24px);
+}
+
+/* ---------- 메인 랜딩 히어로 ---------- */
+
+/* 메인은 히어로가 더 높아서 장식을 세로 가운데에 둡니다 (이미지 크기는 원본 이하로 유지) */
+.hero--home .hero__art {
+  top: 50%;
+  width: min(44%, 621px);
+  border-radius: var(--radius-card) 0 0 var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-50%);
+}
+
+.hero--home .hero__inner {
+  padding-top: clamp(48px, 6vw, 88px);
+  padding-bottom: clamp(56px, 6vw, 96px);
+}
+
+.hero--home .hero__title {
+  margin-top: 18px;
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1.22;
+}
+
+.hero--home .hero__lead {
+  max-width: 30em;
+  margin-top: 24px;
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.7;
+}
+
+.hero--home .btn {
+  margin-top: 36px;
+  min-height: 64px;
+  padding: 0 44px;
+  font-size: 19px;
+}
+
+/* ---------- 메인: 이용 방법 ---------- */
+
+.steps {
+  padding: clamp(56px, 7vw, 96px) 0;
+}
+
+.section-head {
+  text-align: center;
+}
+
+.section-head__title {
+  margin-top: 12px;
+  font-family: var(--font-heading);
+  font-size: clamp(26px, 2.6vw, 36px);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.steps__list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1120px;
+  margin: 48px auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 32px 28px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
+}
+
+.step__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.step__num {
+  font-family: var(--font-logo);
+  font-size: 34px;
+  line-height: 1;
+  color: var(--color-rose);
+}
+
+.step__title {
+  margin-top: 8px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.step__desc {
+  color: var(--color-muted);
+}
+
+.step__link {
+  margin-top: auto;
+  padding-top: 8px;
+  font-weight: 500;
+  color: var(--color-ink);
+  text-underline-offset: 4px;
+}
+
+/* ---------- MOOD: 카드 7장 ---------- */
+
+.mood-select {
+  padding-top: 11px;
+}
+
+.mood-select .container {
+  max-width: 1536px;
+  padding: 0 clamp(16px, 2vw, 31px);
+}
+
+.mood-select fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.mood-grid {
+  --gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap);
+}
+
+.mood-card {
+  position: relative;
+  flex: 0 1 calc((100% - 6 * var(--gap)) / 7);
+  max-width: 214px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.mood-card:hover {
+  border-color: var(--color-sand);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.mood-card__photo {
+  display: block;
+  overflow: hidden;
+  border-radius: calc(var(--radius-card) - 1px) calc(var(--radius-card) - 1px) 0 0;
+}
+
+/* 시안에서 잘라 낸 이미지를 수정 없이 그대로 보여 줍니다 */
+.mood-card__photo img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 201 / 257;
+}
+
+.mood-card__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 26px 10px 22px;
+  text-align: center;
+}
+
+.mood-card__en {
+  font-family: var(--font-menu);
+  font-size: 17px;
+  letter-spacing: 0.04em;
+  color: var(--color-ink);
+}
+
+.mood-card__ko {
+  margin-top: 6px;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--color-ink);
+}
+
+.mood-card__chips {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.mood-card__chips span {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--chip);
+}
+
+.mood-card__desc {
+  margin-top: 22px;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--color-text);
+}
+
+/* 선택 표시: 더스티 로즈 테두리 + ✓ */
+.mood-card__check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--color-rose);
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.mood-card__check svg {
+  width: 18px;
+  height: 18px;
+}
+
+.mood-card.is-selected,
+.mood-card:has(.mood-card__input:checked) {
+  border-color: var(--color-rose);
+  box-shadow: 0 0 0 1px var(--color-rose), var(--shadow-card-hover);
+  transform: translateY(-4px);
+}
+
+.mood-card.is-selected .mood-card__check,
+.mood-card:has(.mood-card__input:checked) .mood-card__check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 키보드 포커스: 선택 표시와 구분되는 차콜 외곽선 */
+.mood-card:has(.mood-card__input:focus-visible) {
+  outline: 2px solid var(--color-button);
+  outline-offset: 4px;
+}
+
+/* ---------- MOOD: 추천 버튼과 안내 ---------- */
+
+.mood-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 32px;
+  text-align: center;
+}
+
+.mood-actions .btn {
+  width: min(480px, 100%);
+  min-height: 88px;
+  font-size: 26px;
+  font-weight: 400;
+}
+
+.mood-actions .btn svg {
+  width: 30px;
+  height: 30px;
+}
+
+.mood-actions__hint {
+  font-size: 15px;
+  color: var(--color-muted);
+}
+
+.notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+  max-width: 560px;
+  padding: 16px 24px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-header-bg);
+  color: var(--color-text);
+}
+
+.notice[hidden] {
+  display: none;
+}
+
+/* ---------- 준비 중 페이지 ---------- */
+
+.soon {
+  padding: clamp(56px, 8vw, 112px) 0 0;
+}
+
+.soon__card {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(36px, 5vw, 64px) clamp(24px, 5vw, 64px);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.soon__title {
+  margin-top: 12px;
+  font-family: var(--font-heading);
+  font-size: clamp(30px, 3.4vw, 44px);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.soon__card .badge {
+  margin-top: 18px;
+}
+
+.soon__lead {
+  margin-top: 20px;
+  font-size: 18px;
+  color: var(--color-text);
+}
+
+.soon__plan {
+  display: inline-block;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+  color: var(--color-muted);
+}
+
+.soon__plan li {
+  position: relative;
+  padding-left: 20px;
+}
+
+.soon__plan li + li {
+  margin-top: 6px;
+}
+
+.soon__plan li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.7em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-sand);
+}
+
+.soon__card .btn {
+  margin-top: 36px;
+}
+
+/* ---------- 반응형 ---------- */
+
+/* 태블릿: 카드 4장 + 3장 */
+@media (max-width: 1199px) {
+  .mood-card {
+    flex-basis: calc((100% - 3 * var(--gap)) / 4);
+  }
+}
+
+@media (max-width: 960px) {
+  .steps__list {
+    grid-template-columns: 1fr;
+    max-width: 560px;
+  }
+}
+
+/* 좁은 화면: 장식을 위로, 글자를 아래로 */
+@media (max-width: 860px) {
+  .hero__art,
+  .hero--home .hero__art {
+    position: relative;
+    top: auto;
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .hero--mood .hero__inner,
+  .hero--home .hero__inner {
+    min-height: 0;
+    padding-top: 32px;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+}
+
+/* 모바일: 카드 2장씩, 마지막 카드는 가운데 */
+@media (max-width: 767px) {
+  .mood-grid {
+    --gap: 10px;
+  }
+
+  .mood-select {
+    padding-top: 20px;
+  }
+
+  .mood-card {
+    flex-basis: calc((100% - var(--gap)) / 2);
+  }
+
+  .mood-card__body {
+    padding: 18px 8px 16px;
+  }
+
+  .mood-card__en {
+    font-size: 14px;
+  }
+
+  .mood-card__ko {
+    font-size: 20px;
+  }
+
+  .mood-card__chips {
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .mood-card__chips span {
+    width: 22px;
+    height: 22px;
+  }
+
+  .mood-card__desc {
+    margin-top: 14px;
+    font-size: 14px;
+  }
+
+  .mood-actions .btn {
+    min-height: 64px;
+    font-size: 20px;
+  }
+
+  .hero--home .btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mood-card.is-selected,
+  .mood-card:has(.mood-card__input:checked) {
+    transform: none;
+  }
+}

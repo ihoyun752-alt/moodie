@@ -1,0 +1,54 @@
+/*
+  moodie. 디자인 토큰
+  색은 최종 디자인 시안에서 직접 측정한 값을 우선 사용합니다 (docs/design.md 3절).
+*/
+:root {
+  /* 배경과 면 */
+  --color-bg: #F4EEE9;          /* 페이지 배경 (시안 측정) */
+  --color-header-bg: #F6F1EA;   /* 헤더 배경 (시안 측정) */
+  --color-hero-bg: #EFE7E1;     /* 히어로 배경 (시안 측정) */
+  --color-card: #F2ECE4;        /* 카드 아래 면 (시안 측정) */
+  --color-section: #E6DDD4;     /* 섹션 배경: Soft Taupe Beige */
+  --color-line: #ECE4DE;        /* 얇은 테두리, 구분선 (시안 측정) */
+  --color-sand: #C8B9AA;        /* Muted Sand: 장식 (글자에는 쓰지 않음) */
+
+  /* 글자 */
+  --color-ink: #30231F;         /* 로고, 제목 (시안 측정) */
+  --color-text: #3E322D;        /* 본문 */
+  --color-muted: #6E5F58;       /* 보조 글자 */
+
+  /* 포인트 */
+  --color-rose: #B78378;        /* Dusty Rose: 선택 상태, 체크 */
+  --color-rose-label: #C5918A;  /* TODAY'S MOOD 같은 영문 라벨 (시안 측정) */
+  --color-rose-dot: #D39B96;    /* 로고 마침표 (시안 측정) */
+
+  /* 버튼 */
+  --color-button: #483A35;      /* 기본 버튼 (시안 측정) */
+  --color-on-button: #FFFFFF;
+
+  /* 글꼴 */
+  --font-logo: "DM Serif Display", Georgia, "Times New Roman", serif;
+  --font-menu: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-heading: "Noto Serif KR", "Nanum Myeongjo", serif;
+  --font-body: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+
+  /* 히어로 손글씨: 최종 결정 전까지 Allura를 임시 기본값으로 사용 */
+  --font-script: "Allura", cursive;
+  --script-scale: 1;
+
+  /* 모양 */
+  --radius-card: 16px;
+  --radius-pill: 999px;
+  --shadow-card: 0 1px 2px rgba(72, 58, 53, 0.04), 0 8px 20px rgba(72, 58, 53, 0.05);
+  --shadow-card-hover: 0 2px 4px rgba(72, 58, 53, 0.06), 0 14px 28px rgba(72, 58, 53, 0.08);
+
+  /* 레이아웃 */
+  --container: 1480px;
+  --gutter: clamp(16px, 2.2vw, 32px);
+  --header-height: 92px;
+}
+
+/* 손글씨 글꼴 후보 (글꼴 비교 화면과 ?script= 미리보기에서 사용) */
+[data-script="pinyon"] { --font-script: "Pinyon Script", cursive; --script-scale: 0.86; }
+[data-script="allura"] { --font-script: "Allura", cursive; --script-scale: 1; }
+[data-script="greatvibes"] { --font-script: "Great Vibes", cursive; --script-scale: 0.9; }

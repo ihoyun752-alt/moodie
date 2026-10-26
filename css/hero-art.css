@@ -1,0 +1,86 @@
+/*
+  히어로 장식 (메인, MOOD 페이지 공통)
+  powder.png는 수정하지 않고, 이미지 속 깨진 손글씨 위에
+  흐림 베일과 HTML 손글씨를 겹쳐서 처리합니다 (docs/design.md 8절).
+  위치 값은 이미지(621 × 263) 안 손글씨 영역(약 x 313~450, y 118~228)을 기준으로 정했습니다.
+  베일의 진한 부분(타원 반지름의 72%)이 이 영역을 모두 덮도록 크기를 계산했습니다.
+*/
+
+.hero-art {
+  position: relative;
+  aspect-ratio: 621 / 263;
+  margin: 0;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.hero-art > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ② 흐림 베일: 손글씨 영역만 흐리게, 가장자리는 서서히 투명하게 */
+.hero-art__veil {
+  position: absolute;
+  left: 39.7%;
+  top: 24.7%;
+  width: 43.5%;
+  height: 82%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(176, 128, 114, 0.5), rgba(176, 128, 114, 0.3) 72%, rgba(176, 128, 114, 0));
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  -webkit-mask-image: radial-gradient(closest-side, #000 72%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 72%, transparent 100%);
+}
+
+/* 흐림 효과를 지원하지 않는 브라우저: 베일 색을 진하게 해서 가립니다 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .hero-art__veil {
+    background: radial-gradient(closest-side, rgba(166, 122, 108, 0.9), rgba(166, 122, 108, 0.7) 70%, rgba(166, 122, 108, 0));
+  }
+}
+
+/* ③ HTML 손글씨 */
+.hero-art__script {
+  position: absolute;
+  left: 50%;
+  top: 41%;
+  font-family: var(--font-script);
+  font-size: calc(9.6cqi * var(--script-scale));
+  font-weight: 400;
+  line-height: 0.95;
+  white-space: nowrap;
+  color: rgba(255, 251, 247, 0.95);
+  text-shadow: 0 1px 2px rgba(96, 60, 50, 0.28);
+  transform: rotate(-7deg);
+  transform-origin: left center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero-art__script span {
+  display: block;
+}
+
+/* 시안의 손글씨처럼 "Find" 아래에 작은 "your", 그 아래 "mood" */
+.hero-art__script span:nth-child(2) {
+  margin-top: -0.05em;
+  padding-left: 1.35em;
+  font-size: 0.5em;
+}
+
+.hero-art__script span:nth-child(3) {
+  margin-top: -0.12em;
+  padding-left: 0.5em;
+  font-size: 0.86em;
+}
+
+/* 장식이 아주 작아지면 손글씨는 숨기고 베일만 남깁니다 */
+@container (max-width: 280px) {
+  .hero-art__script {
+    display: none;
+  }
+}

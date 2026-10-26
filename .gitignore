@@ -1,0 +1,25 @@
+# 비밀 정보 (API 키 등)
+.env
+.env.*
+*.key
+*.pem
+
+# 파이썬 가상환경과 캐시
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Node.js (추후 사용 시)
+node_modules/
+
+# 저장소에 올리지 않는 참고 자료 (원본 디자인 시안 등)
+docs/reference/
+
+# 운영체제와 편집기가 만드는 파일
+*:Zone.Identifier
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

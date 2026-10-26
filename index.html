@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>moodie. — 오늘의 나는, 이런 무드.</title>
+  <meta name="description" content="나의 피부와 취향, 오늘 원하는 분위기에 맞는 뷰티를 발견하는 서비스, moodie.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23F4EEE9'/%3E%3Ctext x='7' y='23' font-family='Georgia,serif' font-size='20' fill='%2330231F'%3Em%3C/text%3E%3Ccircle cx='25' cy='21.5' r='2' fill='%23D39B96'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=DM+Serif+Display&family=Great+Vibes&family=Inter:wght@400;500&family=Noto+Serif+KR:wght@500;600&family=Pinyon+Script&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/hero-art.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html" aria-label="moodie. 홈">moodie<span class="logo__dot">.</span></a>
+      <nav class="site-nav" aria-label="주요 메뉴">
+        <ul>
+          <li><a href="new.html">NEW</a></li>
+          <li><a href="best.html">BEST</a></li>
+          <li><a href="mood.html">MOOD</a></li>
+          <li><a href="all.html">ALL</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button type="button" class="icon-btn" data-soon="검색" aria-label="검색 (준비 중)">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="14" cy="14" r="9"/><path d="M20.5 20.5 28 28"/></svg>
+        </button>
+        <button type="button" class="icon-btn" data-soon="장바구니" aria-label="장바구니 (준비 중)">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 10.5h19l-1.3 17.5H7.8z"/><path d="M11.5 13.5V9a4.5 4.5 0 0 1 9 0v4.5"/></svg>
+        </button>
+        <button type="button" class="icon-btn" data-menu-toggle aria-controls="menu-panel" aria-expanded="false" aria-label="전체 메뉴 열기">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 9h24M4 16h24M4 23h24"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="menu-panel" id="menu-panel" hidden>
+      <nav aria-label="전체 메뉴">
+        <ul>
+          <li><a href="index.html" aria-current="page"><span class="menu-panel__en">HOME</span><span class="menu-panel__ko">홈</span></a></li>
+          <li><a href="new.html"><span class="menu-panel__en">NEW</span><span class="menu-panel__ko">신제품</span></a></li>
+          <li><a href="best.html"><span class="menu-panel__en">BEST</span><span class="menu-panel__ko">베스트</span></a></li>
+          <li><a href="mood.html"><span class="menu-panel__en">MOOD</span><span class="menu-panel__ko">오늘의 무드</span></a></li>
+          <li><a href="all.html"><span class="menu-panel__en">ALL</span><span class="menu-panel__ko">전체 제품</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero hero--home" aria-labelledby="home-title">
+      <figure class="hero__art hero-art" aria-hidden="true">
+        <img src="assets/hero/powder.png" alt="" width="621" height="263">
+        <span class="hero-art__veil"></span>
+        <span class="hero-art__script"><span>Find</span><span>your</span><span>mood</span></span>
+      </figure>
+      <div class="hero__inner">
+        <p class="eyebrow">Personal Beauty Mood</p>
+        <h1 class="hero__title" id="home-title">오늘의 나는,<br>이런 무드.</h1>
+        <p class="hero__lead">나의 피부와 취향, 오늘 원하는 분위기에 맞는<br>뷰티를 발견하는 서비스, moodie.</p>
+        <a class="btn btn--primary" href="mood.html">
+          나의 무드 찾기
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h22M20 9l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <section class="steps" aria-labelledby="steps-title">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">How moodie works</p>
+          <h2 class="section-head__title" id="steps-title">세 단계로 찾는 오늘의 뷰티</h2>
+        </div>
+        <ol class="steps__list">
+          <li class="step">
+            <div class="step__top">
+              <span class="step__num" aria-hidden="true">01</span>
+              <span class="badge">준비 중</span>
+            </div>
+            <h3 class="step__title">뷰티 프로필</h3>
+            <p class="step__desc">피부 타입과 고민, 좋아하는 스타일을 알려 주세요.</p>
+          </li>
+          <li class="step">
+            <div class="step__top">
+              <span class="step__num" aria-hidden="true">02</span>
+              <span class="badge badge--live">지금 이용 가능</span>
+            </div>
+            <h3 class="step__title">오늘의 무드</h3>
+            <p class="step__desc">사진을 보고 오늘 표현하고 싶은 메이크업 무드를 골라요.</p>
+            <a class="step__link" href="mood.html">무드 고르러 가기 →</a>
+          </li>
+          <li class="step">
+            <div class="step__top">
+              <span class="step__num" aria-hidden="true">03</span>
+              <span class="badge">준비 중</span>
+            </div>
+            <h3 class="step__title">맞춤 TOP 3</h3>
+            <p class="step__desc">프로필과 무드에 맞는 화장품 3가지를 추천해 드려요.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <a class="logo" href="index.html" aria-label="moodie. 홈">moodie<span class="logo__dot">.</span></a>
+      <p class="site-footer__slogan">오늘의 나는, 이런 무드.</p>
+      <p class="site-footer__notes">이미지: AI 생성(ChatGPT) · 실제 인물 사진이 아닙니다 · © 2026 moodie. · 수업 Project 1</p>
+    </div>
+  </footer>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+  <script src="js/nav.js" defer></script>
+</body>
+</html>
