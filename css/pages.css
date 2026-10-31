@@ -1434,3 +1434,381 @@
     transform: none;
   }
 }
+
+/* ---------- ALL: 실제 제품 목록 (js/all-page.js) ---------- */
+
+.products {
+  padding: clamp(40px, 6vw, 88px) 0 0;
+}
+
+.products-head {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.products-head__lead {
+  margin-top: 16px;
+  font-size: 17px;
+  color: var(--color-text);
+}
+
+/* 카테고리 탭: 선택한 탭은 진한 버튼색 바탕으로 구분합니다. 좁은 화면에서는 한 줄로 가로 스크롤 */
+.product-filter {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 32px 0 0;
+}
+
+.product-filter__tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 88px;
+  padding: 10px 18px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  background: var(--color-card);
+  font: inherit;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.product-filter__tab:hover {
+  border-color: var(--color-rose);
+}
+
+.product-filter__tab:focus-visible {
+  outline: 2px solid var(--color-rose);
+  outline-offset: 2px;
+}
+
+.product-filter__label {
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.product-filter__count {
+  font-family: var(--font-menu);
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.product-filter__tab.is-active {
+  border-color: var(--color-button);
+  background: var(--color-button);
+  color: var(--color-on-button);
+}
+
+.product-filter__tab.is-active .product-filter__count {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.products-status {
+  margin: 32px 0 0;
+  text-align: center;
+  font-size: 15px;
+  color: var(--color-muted);
+}
+
+.products-status.is-error {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+/* 카드 묶음: 쇼핑몰형 목록. 넓은 화면 4열 → 3열 → 2열(모바일 포함) */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 40px 24px;
+  margin: 32px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.product-grid[hidden] {
+  display: none;
+}
+
+/* 카드: 테두리 상자 대신 사진이 중심이 되고, 글자는 사진 아래에 놓입니다 */
+.product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* 사진 영역: 모든 카드가 같은 4:5 비율 */
+.product-card__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-hero-bg);
+}
+
+.product-card__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 사진 출처: 사진 위 아래쪽에 작게 */
+.product-card__media .product-card__credit {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  max-width: calc(100% - 16px);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(246, 241, 234, 0.88);
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+/* 샘플 이미지: 실제 사진처럼 보이지 않도록 옅은 사선 무늬 바탕에 중립색 립 도형만 그립니다 (셰이드 색 아님) */
+.product-card__sample {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: repeating-linear-gradient(135deg, var(--color-hero-bg) 0 14px, var(--color-card) 14px 28px);
+}
+
+.product-card__sample-art {
+  width: 15%;
+  aspect-ratio: 34 / 116;
+  border-radius: 4px 4px 8px 8px;
+  background: linear-gradient(180deg, var(--color-sand) 0 34%, var(--color-line) 34% 40%, var(--color-muted) 40%);
+  clip-path: polygon(0 16%, 100% 0, 100% 100%, 0 100%);
+  opacity: 0.55;
+}
+
+.product-card__sample-tag {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  padding: 3px 12px;
+  border: 1px dashed var(--color-sand);
+  border-radius: var(--radius-pill);
+  background: var(--color-header-bg);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--color-muted);
+}
+
+/* 검수 전 배지: 사진 왼쪽 위 */
+.product-card__review {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  background: var(--color-header-bg);
+  font-size: 12px;
+}
+
+/* 사진 아래 글자: 브랜드 → 제품명 → 셰이드 → 가격 → 보조 정보 */
+.product-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px 2px 0;
+}
+
+.product-card__brand {
+  font-family: var(--font-menu);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-rose-label);
+}
+
+.product-card__name {
+  display: -webkit-box;
+  margin-top: 6px;
+  overflow: hidden;
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-ink);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.product-card__shade {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+/* 색상칩: 검증된 HEX가 있을 때만 JS가 만듭니다 */
+.product-card__chip {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border: 1px solid rgba(48, 35, 31, 0.15);
+  border-radius: 50%;
+}
+
+.product-card__shade-code {
+  font-family: var(--font-menu);
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+/* 셰이드 발색 사진: 확인된 사진이 있을 때만 */
+.product-card__swatch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 0;
+}
+
+.product-card__swatch-img {
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.product-card__swatch .product-card__credit {
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+.product-card__price {
+  margin-top: 12px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+}
+
+.product-card__price.is-empty {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+/* 보조 정보: 가격 확인일 · 상세 보기 (공식 페이지) */
+.product-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-top: auto;
+  padding-top: 10px;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.product-card .is-empty {
+  color: var(--color-muted);
+}
+
+.product-card__link {
+  font-weight: 500;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.product-card__link::after {
+  content: " ↗";
+}
+
+@media (max-width: 1199px) {
+  .product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 16px;
+  }
+}
+
+@media (max-width: 767px) {
+  .product-filter {
+    justify-content: flex-start;
+    gap: 8px;
+    margin: 24px calc(var(--gutter) * -1) 0;
+    padding: 0 var(--gutter) 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .product-filter::-webkit-scrollbar {
+    display: none;
+  }
+
+  .product-filter__tab {
+    flex: none;
+    min-width: 72px;
+    padding: 8px 14px;
+  }
+
+  .product-filter__label {
+    font-size: 14px;
+  }
+
+  .product-grid {
+    gap: 28px 12px;
+    margin-top: 24px;
+  }
+
+  .product-card__review {
+    top: 8px;
+    left: 8px;
+    padding: 2px 8px;
+    font-size: 11px;
+  }
+
+  .product-card__sample-tag {
+    bottom: 10px;
+    padding: 2px 10px;
+    font-size: 11px;
+  }
+
+  .product-card__body {
+    padding-top: 12px;
+  }
+
+  .product-card__name {
+    font-size: 15px;
+  }
+
+  .product-card__shade {
+    font-size: 13px;
+  }
+
+  .product-card__price {
+    margin-top: 8px;
+    font-size: 17px;
+  }
+
+  .product-card__meta {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 12px;
+  }
+}

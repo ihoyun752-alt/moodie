@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ALL 전체 제품 — moodie.</title>
-  <meta name="description" content="moodie. ALL: 모든 화장품을 카테고리별로 둘러보는 공간이에요. (준비 중)">
+  <meta name="description" content="moodie. ALL: 공식 페이지에서 확인한 실제 화장품 정보를 모아 보는 공간이에요.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23F4EEE9'/%3E%3Ctext x='7' y='23' font-family='Georgia,serif' font-size='20' fill='%2330231F'%3Em%3C/text%3E%3Ccircle cx='25' cy='21.5' r='2' fill='%23D39B96'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,8 +22,6 @@
       <a class="logo" href="index.html" aria-label="moodie. 홈">moodie<span class="logo__dot">.</span></a>
       <nav class="site-nav" aria-label="주요 메뉴">
         <ul>
-          <li><a href="new.html">NEW</a></li>
-          <li><a href="best.html">BEST</a></li>
           <li><a href="mood.html">MOOD</a></li>
           <li><a href="all.html" aria-current="page">ALL</a></li>
         </ul>
@@ -58,24 +56,30 @@
   </header>
 
   <main id="main">
-    <section class="soon" aria-labelledby="soon-title">
+    <!--
+      제품 목록: data/products.csv의 실제 제품(셰이드 1개 = 카드 1장)을 js/all-page.js가 불러와 보여 줍니다.
+      - 공식 페이지에서 확인한 기본 정보만 보여 주며, 무드·추천 점수는 표시하지 않습니다.
+      - 검수 전(pending) 제품도 보여 주고, 카드에 "검수 전" 표시를 붙입니다.
+      - 카테고리 탭(전체·립·치크·베이스·아이섀도우)의 개수는 CSV를 읽어 JS가 채웁니다.
+    -->
+    <section class="products" aria-labelledby="products-title">
       <div class="container">
-        <div class="soon__card">
+        <div class="products-head">
           <p class="eyebrow">ALL</p>
-          <h1 class="soon__title" id="soon-title">전체 제품</h1>
-          <span class="badge">준비 중</span>
-          <p class="soon__lead">모든 화장품을 카테고리별로 둘러보는 공간이에요.<br>지금은 준비 중이라 아직 보여 드릴 제품이 없어요.</p>
-          <ul class="soon__plan" aria-label="준비 중인 기능">
-            <li>베이스 · 아이 · 립 · 치크 등 카테고리별 탐색</li>
-            <li>피부 타입과 무드로 걸러 보기</li>
-          </ul>
-          <div>
-            <a class="btn btn--primary" href="mood.html">
-              그동안 나의 무드 찾기
-              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h22M20 9l7 7-7 7"/></svg>
-            </a>
-          </div>
+          <h1 class="soon__title" id="products-title">전체 제품</h1>
+          <p class="products-head__lead">브랜드 공식 페이지에서 확인한 실제 제품 정보예요. 가격은 확인일 기준이라 지금과 다를 수 있어요.</p>
         </div>
+
+        <div class="product-filter" role="group" aria-label="카테고리로 보기">
+          <button type="button" class="product-filter__tab is-active" data-category="all" aria-pressed="true"><span class="product-filter__label">전체</span><span class="product-filter__count" data-count-for="all">–</span></button>
+          <button type="button" class="product-filter__tab" data-category="lip" aria-pressed="false"><span class="product-filter__label">립</span><span class="product-filter__count" data-count-for="lip">–</span></button>
+          <button type="button" class="product-filter__tab" data-category="cheek" aria-pressed="false"><span class="product-filter__label">치크</span><span class="product-filter__count" data-count-for="cheek">–</span></button>
+          <button type="button" class="product-filter__tab" data-category="base" aria-pressed="false"><span class="product-filter__label">베이스</span><span class="product-filter__count" data-count-for="base">–</span></button>
+          <button type="button" class="product-filter__tab" data-category="eye" aria-pressed="false"><span class="product-filter__label">아이섀도우</span><span class="product-filter__count" data-count-for="eye">–</span></button>
+        </div>
+
+        <p class="products-status" id="products-status" role="status">제품 정보를 불러오는 중이에요…</p>
+        <ul class="product-grid" id="product-list" aria-labelledby="products-title" hidden></ul>
       </div>
     </section>
   </main>
@@ -90,5 +94,6 @@
 
   <div class="toast" role="status" aria-live="polite" data-toast></div>
   <script src="js/nav.js" defer></script>
+  <script src="js/all-page.js" defer></script>
 </body>
 </html>

@@ -23,8 +23,6 @@
       <a class="logo" href="index.html" aria-label="moodie. 홈">moodie<span class="logo__dot">.</span></a>
       <nav class="site-nav" aria-label="주요 메뉴">
         <ul>
-          <li><a href="new.html">NEW</a></li>
-          <li><a href="best.html">BEST</a></li>
           <li><a href="mood.html">MOOD</a></li>
           <li><a href="all.html">ALL</a></li>
         </ul>
@@ -76,102 +74,6 @@
       </div>
     </section>
 
-    <!--
-      메인 캐러셀: 이번 주 신제품 → 무드별 인기 제품 → 출석 체크 이벤트
-      - 한 번에 카드 한 장만 보이고, 아래 "현재/전체" 번호와 이전·다음 버튼은 js/home.js가 처리합니다.
-      - 제품 데이터·랭킹·출석 기록이 아직 없어 샘플·순위 미공개·준비 중으로만 표시합니다 (제품명·가격·구매 링크 없음).
-    -->
-    <section class="home-section" aria-labelledby="picks-title">
-      <div class="container">
-        <div class="home-head">
-          <div>
-            <p class="eyebrow">Moodie Picks</p>
-            <h2 class="section-head__title" id="picks-title">무디 픽 <span class="badge">데이터 연결 예정</span></h2>
-          </div>
-        </div>
-        <div class="slider">
-          <ul class="slider__track" id="picks-track" tabindex="0" aria-label="이번 주 신제품, 무드별 인기 제품, 출석 체크 이벤트. 가로로 넘겨 보세요">
-            <li class="slide slide--new">
-              <div class="slide__text">
-                <div class="slide__tags"><span class="badge badge--live">이번 주 신제품</span><span class="badge">샘플 일러스트</span></div>
-                <h3 class="slide__title">이번 주 신제품</h3>
-                <p class="slide__lead">립, 베이스, 아이, 블러셔 등 카테고리별 신제품을 이곳에 모아 보여 드릴 예정이에요.</p>
-                <div class="slide__actions">
-                  <a class="btn btn--primary" href="new.html">
-                    NEW 페이지 보기
-                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h22M20 9l7 7-7 7"/></svg>
-                  </a>
-                </div>
-                <p class="slide__note">그림은 카테고리를 나타내는 샘플이에요. 제품명, 가격, 구매 링크는 확인된 데이터를 연결한 뒤 보여 드릴게요.</p>
-              </div>
-              <ul class="slide__art tile-grid tile-grid--3" aria-label="카테고리 샘플 일러스트">
-                <li class="tile" style="--tile-bg: #F1DFDA"><span class="shape shape--lip" aria-hidden="true"></span><span class="tile__label">립</span></li>
-                <li class="tile" style="--tile-bg: #EFE7E1"><span class="shape shape--cushion" aria-hidden="true"></span><span class="tile__label">베이스</span></li>
-                <li class="tile" style="--tile-bg: #E6DDD4"><span class="shape shape--palette" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span class="tile__label">아이</span></li>
-                <li class="tile" style="--tile-bg: #F3E4E0"><span class="shape shape--blush" aria-hidden="true"></span><span class="tile__label">블러셔</span></li>
-                <li class="tile" style="--tile-bg: #DDD3CB"><span class="shape shape--mascara" aria-hidden="true"></span><span class="tile__label">마스카라</span></li>
-                <li class="tile" style="--tile-bg: #F6F1EA"><span class="shape shape--bottle" aria-hidden="true"></span><span class="tile__label">스킨케어</span></li>
-              </ul>
-            </li>
-            <li class="slide slide--best">
-              <div class="slide__text">
-                <div class="slide__tags"><span class="badge badge--live">무드별 인기 제품</span><span class="badge">순위 미공개</span></div>
-                <h3 class="slide__title">무드별 인기 제품</h3>
-                <p class="slide__lead">PURE부터 HIP까지 무드별 인기 제품을 모아 보여 드릴 예정이에요. 무드를 누르면 바로 골라 볼 수 있어요.</p>
-                <div class="slide__actions">
-                  <a class="btn btn--primary" href="best.html">
-                    BEST 페이지 보기
-                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h22M20 9l7 7-7 7"/></svg>
-                  </a>
-                </div>
-                <p class="slide__note">출처가 확인된 랭킹 데이터를 연결하기 전까지 제품과 순위는 보여 드리지 않아요. 색 동그라미는 각 무드의 대표 색이에요.</p>
-              </div>
-              <ul class="slide__art tile-grid tile-grid--4" aria-label="무드 고르기">
-                <li><a class="tile tile--mood" href="mood.html?mood=pure"><span class="tile__chips" aria-hidden="true"><span style="--chip: #E2AEAB"></span><span style="--chip: #CD9992"></span><span style="--chip: #C18E87"></span></span><span class="tile__label">PURE</span></a></li>
-                <li><a class="tile tile--mood" href="mood.html?mood=nude"><span class="tile__chips" aria-hidden="true"><span style="--chip: #D2A797"></span><span style="--chip: #B27166"></span><span style="--chip: #985B50"></span></span><span class="tile__label">NUDE</span></a></li>
-                <li><a class="tile tile--mood" href="mood.html?mood=modern"><span class="tile__chips" aria-hidden="true"><span style="--chip: #C3A5A0"></span><span style="--chip: #B08D8B"></span><span style="--chip: #4D3A35"></span></span><span class="tile__label">MODERN</span></a></li>
-                <li><a class="tile tile--mood" href="mood.html?mood=lovely"><span class="tile__chips" aria-hidden="true"><span style="--chip: #D79494"></span><span style="--chip: #D08080"></span><span style="--chip: #D28782"></span></span><span class="tile__label">LOVELY</span></a></li>
-                <li><a class="tile tile--mood" href="mood.html?mood=chic"><span class="tile__chips" aria-hidden="true"><span style="--chip: #D3B0AD"></span><span style="--chip: #AD8183"></span><span style="--chip: #885F65"></span></span><span class="tile__label">CHIC</span></a></li>
-                <li><a class="tile tile--mood" href="mood.html?mood=glam"><span class="tile__chips" aria-hidden="true"><span style="--chip: #C39284"></span><span style="--chip: #762F2F"></span><span style="--chip: #782F2F"></span></span><span class="tile__label">GLAM</span></a></li>
-                <li><a class="tile tile--mood" href="mood.html?mood=hip"><span class="tile__chips" aria-hidden="true"><span style="--chip: #A49998"></span><span style="--chip: #867776"></span><span style="--chip: #B98687"></span></span><span class="tile__label">HIP</span></a></li>
-              </ul>
-            </li>
-            <li class="slide slide--dots" style="--slide-bg: #EBD8D1">
-              <div class="slide__text">
-                <div class="slide__tags"><span class="badge badge--live">출석 체크 이벤트</span><span class="badge">준비 중</span></div>
-                <h3 class="slide__title">매일 출석 체크</h3>
-                <p class="slide__lead">매일 들러 출석 도장을 찍는 이벤트를 준비하고 있어요.</p>
-                <div class="slide__actions">
-                  <button type="button" class="btn btn--primary" disabled aria-describedby="attend-note">출석하기 (준비 중)</button>
-                </div>
-                <p class="slide__note" id="attend-note">출석 기록과 포인트 적립은 아직 준비 중이에요. 아무것도 저장하지 않아요.</p>
-              </div>
-              <div class="slide__art art-week">
-                <ol class="attendance__week" id="attendance-week" aria-label="이번 주">
-                  <li><span class="attendance__day">월</span><span class="attendance__date"></span></li>
-                  <li><span class="attendance__day">화</span><span class="attendance__date"></span></li>
-                  <li><span class="attendance__day">수</span><span class="attendance__date"></span></li>
-                  <li><span class="attendance__day">목</span><span class="attendance__date"></span></li>
-                  <li><span class="attendance__day">금</span><span class="attendance__date"></span></li>
-                  <li><span class="attendance__day">토</span><span class="attendance__date"></span></li>
-                  <li><span class="attendance__day">일</span><span class="attendance__date"></span></li>
-                </ol>
-                <ul class="perks">
-                  <li>7일 연속 출석 선물 <span class="badge">예정 혜택</span></li>
-                  <li>출석 포인트로 AI 메이크업 체험 <span class="badge">예정 혜택</span></li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-          <div class="slider__controls">
-            <button type="button" class="carousel-btn" data-dir="-1" aria-controls="picks-track" aria-label="이전 카드"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-            <p class="slider__count"><span class="visually-hidden">현재 카드 </span><span data-current>1</span>/<span data-total>3</span></p>
-            <button type="button" class="carousel-btn" data-dir="1" aria-controls="picks-track" aria-label="다음 카드"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="steps" aria-labelledby="steps-title">
       <div class="container">
         <div class="section-head">
@@ -202,13 +104,12 @@
               <span class="step__num" aria-hidden="true">03</span>
               <span class="badge">준비 중</span>
             </div>
-            <h3 class="step__title">맞춤 TOP 3</h3>
-            <p class="step__desc">프로필과 무드에 맞는 화장품 3가지를 추천해 드려요.</p>
+            <h3 class="step__title">맞춤 추천</h3>
+            <p class="step__desc">프로필과 무드에 맞는 화장품을 추천해줘요.</p>
           </li>
         </ol>
       </div>
     </section>
-
   </main>
 
   <footer class="site-footer">
@@ -222,6 +123,5 @@
   <div class="toast" role="status" aria-live="polite" data-toast></div>
   <script src="js/nav.js" defer></script>
   <script src="js/profile-store.js" defer></script>
-  <script src="js/home.js" defer></script>
 </body>
 </html>
