@@ -36,6 +36,9 @@
         <button type="button" class="icon-btn" data-soon="장바구니" aria-label="장바구니 (준비 중)">
           <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 10.5h19l-1.3 17.5H7.8z"/><path d="M11.5 13.5V9a4.5 4.5 0 0 1 9 0v4.5"/></svg>
         </button>
+        <a class="icon-btn" href="mypage.html" aria-label="마이페이지">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="16" cy="11" r="5.5"/><path d="M5.5 28c1.4-5.6 5.5-8.5 10.5-8.5s9.1 2.9 10.5 8.5"/></svg>
+        </a>
         <button type="button" class="icon-btn" data-menu-toggle aria-controls="menu-panel" aria-expanded="false" aria-label="전체 메뉴 열기">
           <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 9h24M4 16h24M4 23h24"/></svg>
         </button>
@@ -49,6 +52,7 @@
           <li><a href="best.html"><span class="menu-panel__en">BEST</span><span class="menu-panel__ko">베스트</span></a></li>
           <li><a href="mood.html" aria-current="page"><span class="menu-panel__en">MOOD</span><span class="menu-panel__ko">오늘의 무드</span></a></li>
           <li><a href="all.html"><span class="menu-panel__en">ALL</span><span class="menu-panel__ko">전체 제품</span></a></li>
+          <li><a href="mypage.html"><span class="menu-panel__en">MY</span><span class="menu-panel__ko">마이페이지</span></a></li>
         </ul>
       </nav>
     </div>
@@ -70,13 +74,13 @@
 
     <section class="mood-select" aria-label="무드 선택">
       <div class="container">
-        <form id="mood-form" novalidate>
+        <form id="mood-form" action="result.html" method="get" novalidate>
           <fieldset>
             <legend class="visually-hidden">오늘의 무드 7가지 중 하나를 선택하세요. 이미지는 AI로 생성한 메이크업 예시입니다.</legend>
             <div class="mood-grid">
             <label class="mood-card">
               <input class="mood-card__input visually-hidden" type="radio" name="mood" value="pure" aria-labelledby="mood-pure-en mood-pure-ko" aria-describedby="mood-pure-desc">
-              <span class="mood-card__photo"><img src="assets/moods/pure.png" alt="" width="201" height="257"></span>
+              <span class="mood-card__photo"><img src="assets/moods/edit/pure.png" alt="" width="201" height="257"></span>
               <span class="mood-card__check" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10.5l3.2 3.2L15 7"/></svg></span>
               <span class="mood-card__body">
                 <span class="mood-card__en" id="mood-pure-en">PURE</span>
@@ -87,7 +91,7 @@
             </label>
             <label class="mood-card">
               <input class="mood-card__input visually-hidden" type="radio" name="mood" value="nude" aria-labelledby="mood-nude-en mood-nude-ko" aria-describedby="mood-nude-desc">
-              <span class="mood-card__photo"><img src="assets/moods/nude.png" alt="" width="201" height="257"></span>
+              <span class="mood-card__photo"><img src="assets/moods/edit/nude.png" alt="" width="201" height="257"></span>
               <span class="mood-card__check" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10.5l3.2 3.2L15 7"/></svg></span>
               <span class="mood-card__body">
                 <span class="mood-card__en" id="mood-nude-en">NUDE</span>
@@ -98,7 +102,7 @@
             </label>
             <label class="mood-card">
               <input class="mood-card__input visually-hidden" type="radio" name="mood" value="modern" aria-labelledby="mood-modern-en mood-modern-ko" aria-describedby="mood-modern-desc">
-              <span class="mood-card__photo"><img src="assets/moods/modern.png" alt="" width="201" height="257"></span>
+              <span class="mood-card__photo"><img src="assets/moods/edit/modern.png" alt="" width="201" height="257"></span>
               <span class="mood-card__check" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10.5l3.2 3.2L15 7"/></svg></span>
               <span class="mood-card__body">
                 <span class="mood-card__en" id="mood-modern-en">MODERN</span>
@@ -109,7 +113,7 @@
             </label>
             <label class="mood-card">
               <input class="mood-card__input visually-hidden" type="radio" name="mood" value="lovely" aria-labelledby="mood-lovely-en mood-lovely-ko" aria-describedby="mood-lovely-desc">
-              <span class="mood-card__photo"><img src="assets/moods/lovely.png" alt="" width="201" height="257"></span>
+              <span class="mood-card__photo"><img src="assets/moods/edit/lovely.png" alt="" width="201" height="257"></span>
               <span class="mood-card__check" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10.5l3.2 3.2L15 7"/></svg></span>
               <span class="mood-card__body">
                 <span class="mood-card__en" id="mood-lovely-en">LOVELY</span>
@@ -120,7 +124,7 @@
             </label>
             <label class="mood-card">
               <input class="mood-card__input visually-hidden" type="radio" name="mood" value="chic" aria-labelledby="mood-chic-en mood-chic-ko" aria-describedby="mood-chic-desc">
-              <span class="mood-card__photo"><img src="assets/moods/chic.png" alt="" width="201" height="257"></span>
+              <span class="mood-card__photo"><img src="assets/moods/edit/chic.png" alt="" width="201" height="257"></span>
               <span class="mood-card__check" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10.5l3.2 3.2L15 7"/></svg></span>
               <span class="mood-card__body">
                 <span class="mood-card__en" id="mood-chic-en">CHIC</span>
@@ -156,14 +160,11 @@
 
           <div class="mood-actions">
             <button type="submit" class="btn btn--primary" id="recommend-btn" disabled aria-describedby="mood-hint">
-              이 무드로 추천받기
+              다음: 결과 보기
               <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h22M20 9l7 7-7 7"/></svg>
             </button>
-            <p class="mood-actions__hint" id="mood-hint" aria-live="polite">무드를 하나 선택하면 추천받기 버튼이 활성화돼요.</p>
-            <div class="notice" id="mood-notice" role="status" hidden>
-              <span class="badge">준비 중</span>
-              <span id="mood-notice-text"></span>
-            </div>
+            <p class="mood-actions__hint" id="mood-hint" aria-live="polite">무드를 하나 선택하면 다음 단계로 넘어갈 수 있어요.</p>
+            <p class="mood-actions__profile" id="mood-profile"></p>
           </div>
         </form>
       </div>
@@ -180,6 +181,7 @@
 
   <div class="toast" role="status" aria-live="polite" data-toast></div>
   <script src="js/nav.js" defer></script>
+  <script src="js/profile-store.js" defer></script>
   <script src="js/mood-page.js" defer></script>
 </body>
 </html>
