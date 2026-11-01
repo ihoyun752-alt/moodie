@@ -9,7 +9,8 @@
   var status = document.getElementById("products-status");
   if (!list || !status) return;
 
-  var CSV_URL = "data/products.csv";
+  // 모드(js/data-mode.js)에 따라 시연 복사본 또는 실제 products.csv를 읽습니다.
+  var CSV_URL = window.MoodieDataMode ? window.MoodieDataMode.csvUrl : "data/products-demo.csv";
   var EMPTY = "정보 없음";
   var REQUIRED = ["product_id", "brand", "product_name", "shade_name", "shade_code", "price", "price_checked_at", "product_url", "review_status"];
   // 검수 상태 표시 (docs/product-database-design.md 5절의 허용값). approved는 따로 표시하지 않습니다.
@@ -298,12 +299,14 @@
     list.hidden = shown.length === 0;
     list.setAttribute("data-count", String(shown.length));
     var label = CATEGORY_LABEL[current] || "";
+    var approvedCount = products.filter(function (p) { return p.review_status === "approved" && p.is_available === "true"; }).length;
+    var noApproved = !approvedCount && window.MoodieDataMode && !window.MoodieDataMode.isDemo ? "검수 완료된 상품이 아직 없습니다. 아래는 검수 상태별 제품 목록이에요. " : "";
     if (!products.length) {
       status.textContent = "아직 보여 드릴 제품이 없어요.";
     } else if (!shown.length) {
-      status.textContent = label + " 제품은 아직 없어요.";
+      status.textContent = noApproved + label + " 제품은 아직 없어요.";
     } else {
-      status.textContent = (current === "all" ? "실제 제품 " : label + " 제품 ") + shown.length + "개를 보여 드려요.";
+      status.textContent = noApproved + (current === "all" ? "" : label + " ") + "제품 " + shown.length + "개를 보여 드려요.";
     }
   }
 

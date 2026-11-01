@@ -1,5 +1,5 @@
 // 뷰티 프로필 페이지: 저장된 프로필 불러오기, 퍼스널 컬러 세부 유형, 고민·스타일 3개 제한, 필수 항목 확인, localStorage 저장
-// 주소에 ?mood= 가 있으면(무드를 먼저 고르고 온 경우) 저장 후 그 무드의 결과 화면으로 이어 줍니다.
+// 주소에 ?mood= 가 있으면(무드를 먼저 고르고 온 경우) 저장 후 그 무드의 제품 추천 화면으로 이어 줍니다.
 (function () {
   "use strict";
 
@@ -22,9 +22,9 @@
   };
 
   if (store.isMood(mood)) {
-    status.textContent = "선택한 무드: " + store.moodLabel(mood) + " · 프로필을 저장하면 결과 요약으로 이어져요. (이 브라우저에만 저장돼요)";
-    next.href = "result.html?mood=" + mood;
-    next.firstChild.textContent = "선택한 무드로 결과 보기 ";
+    status.textContent = "선택한 무드: " + store.moodLabel(mood) + " · 프로필을 저장하면 제품 추천으로 이어져요. (이 브라우저에만 저장돼요)";
+    next.href = "recommend.html?mood=" + mood;
+    next.firstChild.textContent = "선택한 무드로 제품 추천 보기 ";
   }
 
   function inputs(name) {
@@ -59,7 +59,8 @@
 
   function personalColor() {
     var season = value("pcSeason");
-    if (!season || season === store.PERSONAL_COLOR_UNKNOWN) return season;
+    // "모름"과 "뉴트럴톤"은 세부 유형이 없는 선택지입니다.
+    if (!season || season === store.PERSONAL_COLOR_UNKNOWN || season === store.PERSONAL_COLOR_NEUTRAL) return season;
     var detail = value("pcDetail");
     return store.seasonOf(detail) === season ? detail : season;
   }
@@ -88,7 +89,7 @@
     profile.styles.forEach(function (v) { check("style", v); });
     if (profile.finish) check("finish", profile.finish);
     var pc = profile.personalColor;
-    if (pc === store.PERSONAL_COLOR_UNKNOWN) {
+    if (pc === store.PERSONAL_COLOR_UNKNOWN || pc === store.PERSONAL_COLOR_NEUTRAL) {
       check("pcSeason", pc);
     } else if (pc) {
       check("pcSeason", store.seasonOf(pc));

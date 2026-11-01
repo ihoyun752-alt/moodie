@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>맞춤 제품 추천 — moodie.</title>
+  <meta name="description" content="선택한 무드와 뷰티 프로필에 맞는 제품을 카테고리별로 추천해 드려요.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23F4EEE9'/%3E%3Ctext x='7' y='23' font-family='Georgia,serif' font-size='20' fill='%2330231F'%3Em%3C/text%3E%3Ccircle cx='25' cy='21.5' r='2' fill='%23D39B96'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500&family=Noto+Serif+KR:wght@500;600&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/pages.css?v=20261102-cv1">
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html" aria-label="moodie. 홈">moodie<span class="logo__dot">.</span></a>
+      <nav class="site-nav" aria-label="주요 메뉴">
+        <ul>
+          <li><a href="mood.html">MOOD</a></li>
+          <li><a href="all.html">ALL</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <a class="icon-btn" href="mypage.html" aria-label="마이페이지">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="16" cy="11" r="5.5"/><path d="M5.5 28c1.4-5.6 5.5-8.5 10.5-8.5s9.1 2.9 10.5 8.5"/></svg>
+        </a>
+        <button type="button" class="icon-btn" data-menu-toggle aria-controls="menu-panel" aria-expanded="false" aria-label="전체 메뉴 열기">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 9h24M4 16h24M4 23h24"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="menu-panel" id="menu-panel" hidden>
+      <nav aria-label="전체 메뉴">
+        <ul>
+          <li><a href="index.html"><span class="menu-panel__en">HOME</span><span class="menu-panel__ko">홈</span></a></li>
+          <li><a href="mood.html"><span class="menu-panel__en">MOOD</span><span class="menu-panel__ko">오늘의 무드</span></a></li>
+          <li><a href="all.html"><span class="menu-panel__en">ALL</span><span class="menu-panel__ko">전체 제품</span></a></li>
+          <li><a href="mypage.html"><span class="menu-panel__en">MY</span><span class="menu-panel__ko">마이페이지</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!--
+      카테고리별 추천: js/recommend-engine.js가 계산하고 js/recommend-page.js가 그립니다.
+      - v6: 립·치크·아이섀도우는 고른 무드가 대표·보조 무드 태그에 있는 셰이드만 점수 후보. 무드 40 + 퍼스널 컬러 30 (피부 미적용).
+      - 대표 무드 제품이 항상 보조 무드 제품보다 위. MODERN 립은 쿨 → 뉴트럴·혼합 → 웜 → 미확인.
+      - 베이스: 무드 미적용, 퍼스널 컬러 30 + 피부 30. 피부 정보 미확인 제품은 점수 없이 미확인 목록.
+      - 뉴트럴톤 제품은 퍼스널 컬러 적합도 0.7 이상 제품이 3개 미만일 때만 보완 그룹으로 표시.
+      - v7: 무드 태그가 다른 무드지만 공식 color_note에 고른 무드의 색 단어가 있으면 '색감 근거 보완 후보'로 점수·순위 없이 노출.
+      - v7: 승인·판매 중이나 무드 태그가 없는 제품은 '검수 후보'로만 표시하고 자동 추천하지 않음.
+      - 고른 제품은 localStorage "moodie.selection"에 저장하고 result.html로 넘어갑니다.
+    -->
+    <section class="products" aria-labelledby="rec-title">
+      <div class="container">
+        <ol class="flow-steps" aria-label="진행 단계">
+          <li class="is-done"><span class="flow-steps__num" aria-hidden="true">1</span>뷰티 프로필<span class="visually-hidden"> (완료)</span></li>
+          <li class="is-done"><span class="flow-steps__num" aria-hidden="true">2</span>오늘의 무드<span class="visually-hidden"> (완료)</span></li>
+          <li aria-current="step"><span class="flow-steps__num" aria-hidden="true">3</span>제품 추천</li>
+          <li><span class="flow-steps__num" aria-hidden="true">4</span>결과 요약</li>
+        </ol>
+
+        <!-- 필요한 정보 없이 들어온 경우 -->
+        <div class="soon__card flow-missing" id="rec-missing" hidden>
+          <h2 class="soon__title">선택 정보가 부족해요</h2>
+          <p class="soon__lead" id="rec-missing-text">무드와 뷰티 프로필이 먼저 필요해요.</p>
+          <div>
+            <a class="btn btn--primary" id="rec-missing-link" href="mood.html">
+              <span id="rec-missing-label">무드 고르러 가기</span>
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h22M20 9l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div id="rec-main" hidden>
+          <div class="products-head">
+            <p class="eyebrow">Recommend</p>
+            <h1 class="soon__title" id="rec-title">카테고리별 맞춤 추천</h1>
+            <p class="products-head__lead" id="rec-context"></p>
+          </div>
+          <p class="notice" role="note" id="rec-notice">시연용 가상 데이터입니다. 추천 흐름 확인을 위한 샘플이며, 실제 제품 검수·판매 여부·피부 및 퍼스널 컬러 적합성을 확인한 결과가 아닙니다.</p>
+          <ul class="rec-notes" id="rec-notes"></ul>
+          <p class="products-status" id="rec-status" role="status">제품 정보를 불러오는 중이에요…</p>
+
+          <div class="soon__card flow-missing rec-empty" id="rec-empty" hidden>
+            <h2 class="soon__title">검수 완료된 상품이 아직 없습니다</h2>
+            <p class="soon__lead">실제 데이터(products.csv)에서 검수와 판매 상태가 확인된 제품이 없어 추천을 만들 수 없어요. 전체 상품 목록에서 검수 상태를 확인할 수 있어요.</p>
+            <div>
+              <a class="btn btn--primary" href="all.html">전체 상품 보기</a>
+            </div>
+          </div>
+
+          <section class="rec-extra" id="rec-extra" aria-labelledby="rec-extra-title" hidden>
+            <h2 class="rec-extra__title" id="rec-extra-title">이 무드의 추가 확인 후보</h2>
+            <p class="rec-extra__lead">무드 태그는 다른 무드로 승인됐지만 색감 설명이 이 무드와 맞는 제품과, 승인·판매 중이지만 무드 태그가 없는 제품이에요. 점수·순위를 매기지 않았고, 시뮬레이션 색이 승인되지 않아 결과 화면에는 적용되지 않아요.</p>
+            <div id="rec-extra-body"></div>
+          </section>
+
+          <section class="rec-section" data-category="lip" aria-labelledby="rec-lip-title" hidden>
+            <h2 class="rec-section__title" id="rec-lip-title">립</h2>
+            <p class="rec-section__status" data-status></p>
+            <ul class="product-grid rec-grid" data-list></ul>
+          </section>
+
+          <section class="rec-section" data-category="cheek" aria-labelledby="rec-cheek-title" hidden>
+            <h2 class="rec-section__title" id="rec-cheek-title">치크</h2>
+            <p class="rec-section__status" data-status></p>
+            <ul class="product-grid rec-grid" data-list></ul>
+          </section>
+
+          <section class="rec-section" data-category="eye" aria-labelledby="rec-eye-title" hidden>
+            <h2 class="rec-section__title" id="rec-eye-title">아이섀도우</h2>
+            <p class="rec-section__status" data-status></p>
+            <ul class="product-grid rec-grid" data-list></ul>
+          </section>
+
+          <section class="rec-section" data-category="base" aria-labelledby="rec-base-title" hidden>
+            <h2 class="rec-section__title" id="rec-base-title">베이스</h2>
+            <p class="rec-section__status" data-status></p>
+            <ul class="product-grid rec-grid" data-list></ul>
+          </section>
+
+          <div class="flow-actions">
+            <a class="flow-actions__back" id="rec-back" href="mood.html">무드 다시 고르기</a>
+            <div class="rec-next">
+              <p class="rec-next__hint" id="rec-next-hint" role="status"></p>
+              <button type="button" class="btn btn--primary" id="rec-next" disabled>
+                선택 완료: 결과 보기
+                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h22M20 9l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <a class="logo" href="index.html" aria-label="moodie. 홈">moodie<span class="logo__dot">.</span></a>
+      <p class="site-footer__slogan">오늘의 나는, 이런 무드.</p>
+      <p class="site-footer__notes">이미지: AI 생성(ChatGPT) · 실제 인물 사진이 아닙니다 · © 2026 moodie. · 수업 Project 1</p>
+    </div>
+  </footer>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+  <script src="js/data-mode.js?v=20261102-cv1" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/profile-store.js?v=20261102-v6" defer></script>
+  <script src="js/products-data.js?v=20261102-v7" defer></script>
+  <script src="js/recommend-engine.js?v=20261102-v7" defer></script>
+  <script src="js/selection-store.js?v=20261101-rec" defer></script>
+  <script src="js/recommend-page.js?v=20261102-cv1" defer></script>
+</body>
+</html>

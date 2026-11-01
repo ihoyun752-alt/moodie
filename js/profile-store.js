@@ -32,6 +32,8 @@
     winter: { label: "겨울 쿨", subtypes: { "winter-bright": "겨울 쿨 브라이트", "winter-deep": "겨울 쿨 딥" } }
   };
   var PERSONAL_COLOR_UNKNOWN = "unknown";
+  // 뉴트럴톤: 계절·세부 유형이 없는 별도 선택지 (2026-11-02 v6). 웜·쿨과 합치지 않습니다.
+  var PERSONAL_COLOR_NEUTRAL = "neutral";
 
   var MAX_CONCERNS = 3;
   var MAX_STYLES = 3;
@@ -53,13 +55,14 @@
 
   function personalColorLabel(value) {
     if (value === PERSONAL_COLOR_UNKNOWN) return "아직 모르겠어요";
+    if (value === PERSONAL_COLOR_NEUTRAL) return "뉴트럴톤";
     var season = seasonOf(value);
     if (!season) return "";
     return value === season ? SEASONS[season].label + " (세부 유형 모름)" : SEASONS[season].subtypes[value];
   }
 
   function validPersonalColor(value) {
-    return value === PERSONAL_COLOR_UNKNOWN || Boolean(seasonOf(value));
+    return value === PERSONAL_COLOR_UNKNOWN || value === PERSONAL_COLOR_NEUTRAL || Boolean(seasonOf(value));
   }
 
   function pick(list, map, max) {
@@ -152,6 +155,7 @@
     FINISH: FINISH,
     SEASONS: SEASONS,
     PERSONAL_COLOR_UNKNOWN: PERSONAL_COLOR_UNKNOWN,
+    PERSONAL_COLOR_NEUTRAL: PERSONAL_COLOR_NEUTRAL,
     MAX_CONCERNS: MAX_CONCERNS,
     MAX_STYLES: MAX_STYLES,
     isMood: function (id) { return has(MOODS, id); },

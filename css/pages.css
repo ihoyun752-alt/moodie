@@ -660,6 +660,441 @@
   margin-top: 28px;
 }
 
+/* 메이크업 시뮬레이션 (2026-11-02): PC는 원본·결과 나란히, 좁은 화면은 위아래 */
+.sim {
+  margin-top: 20px;
+}
+
+.sim__pair {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.sim__figure {
+  position: relative;
+  margin: 0;
+}
+
+.sim__canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  background: var(--color-card);
+}
+
+/* 사진 아래쪽에 겹치는 라벨 */
+.sim__caption {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(72, 58, 53, 0.78);
+  color: #fff;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.sim__caption.is-accent {
+  background: rgba(183, 107, 104, 0.9);
+}
+
+.sim__arrow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--color-ink);
+  box-shadow: 0 2px 10px rgba(48, 35, 31, 0.15);
+}
+
+.sim__arrow svg {
+  width: 22px;
+  height: 22px;
+}
+
+.sim__zooms {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 12px;
+  list-style: none;
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  background: var(--color-bg);
+}
+
+.sim__zoom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.sim__zoom-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.sim__zoom-title {
+  margin-top: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.sim__zoom-text {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.sim__zoom.is-off .sim__zoom-canvas {
+  opacity: 0.55;
+}
+
+.sim__status,
+.sim__disclaimer {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+/* ---------- 결과 요약 레이아웃 (2026-11-02 담당자 예시) ---------- */
+.result-page {
+  padding-top: 32px;
+  padding-bottom: 48px;
+}
+
+/* 결과 요약은 두 단 레이아웃이라 공통 흐름 폭(808px) 대신 사이트 기본 폭을 씁니다 */
+.flow.result-page .container {
+  max-width: 1240px;
+}
+
+.result-profile-grid .summary__row {
+  grid-template-columns: 6.5em minmax(0, 1fr);
+  gap: 10px;
+}
+
+.result-demo-note {
+  font-size: 13px;
+}
+
+.result-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-bottom: 24px;
+}
+
+.result-top__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.result-top .flow-steps {
+  margin: 0;
+}
+
+.result-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.result-layout[hidden] {
+  display: none;
+}
+
+.result-layout__main,
+.result-layout__side {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+
+.result-panel {
+  padding: 20px;
+  border: 1px solid var(--color-line);
+  border-radius: 18px;
+  background: var(--color-card);
+}
+
+.result-panel .card-head--sub {
+  margin-top: 0;
+}
+
+.result-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+  margin-top: 12px;
+}
+
+.result-mood-card .result-mood__photo {
+  width: 96px;
+}
+
+.result-mood__desc {
+  margin: 16px 0 0;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: #F6E3E1;
+  text-align: center;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.result-demo-note {
+  max-width: none;
+  margin: 0;
+}
+
+.result-picks {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.result-pick {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px 10px 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  background: var(--color-card);
+}
+
+.result-pick__media {
+  width: 88px;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--color-bg);
+}
+
+.result-pick__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.result-pick__cat {
+  display: inline-block;
+  padding: 1px 10px;
+  border-radius: 999px;
+  background: #F6E3E1;
+  font-size: 12px;
+  color: var(--color-text);
+}
+
+.result-pick__name {
+  margin: 6px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-ink);
+}
+
+.result-pick__shade {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+/* v7: product_id·색상 상태·팔레트 구성 */
+.result-pick__id {
+  margin: 2px 0 0;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--color-muted);
+}
+
+.result-pick__color,
+.result-pick__sim {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.result-pick__color.is-muted {
+  color: var(--color-muted);
+}
+
+.result-pick__chip {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  vertical-align: -2px;
+}
+
+.result-pick__sim {
+  color: var(--color-muted);
+}
+
+.result-palette {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: 1px dashed var(--color-sand);
+  border-radius: 10px;
+}
+
+.result-palette__title,
+.result-palette__note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+.result-palette__title {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.result-palette__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 6px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.result-palette__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--color-text);
+}
+
+.result-palette__role {
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+.result-pick .result-pc-note {
+  display: block;
+  margin-top: 4px;
+}
+
+.result-pick__badge {
+  display: grid;
+  justify-items: center;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: #F6E3E1;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #A3504B;
+}
+
+.result-pick.is-empty {
+  opacity: 0.7;
+}
+
+.result-actions {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+.result-actions__main {
+  justify-content: center;
+  width: 100%;
+}
+
+.result-actions__main svg {
+  width: 22px;
+  height: 22px;
+}
+
+@media (max-width: 960px) {
+  .result-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .result-panel {
+    padding: 14px;
+  }
+
+  .sim__zooms {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sim__caption {
+    bottom: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  .sim__arrow {
+    width: 32px;
+    height: 32px;
+  }
+
+  .result-profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-pick {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .result-pick__media {
+    width: 64px;
+  }
+
+  .result-pick__badge {
+    grid-column: 2;
+    justify-self: start;
+    display: flex;
+    gap: 4px;
+  }
+}
+
+/* 무드 사진 바로 아래 시연용 데이터 안내: 사진과 붙지 않게 간격을 두고 카드 폭에 맞춤 (2026-11-02) */
+.result-mood + .notice {
+  max-width: none;
+  margin-top: 20px;
+}
+
 /* ---------- 프로필 · 마이페이지 · 결과: 추가 요소 ---------- */
 
 /* 퍼스널 컬러 세부 유형: 고른 계절 아래에 들여 보여 줍니다 */
@@ -1840,4 +2275,404 @@
     align-items: flex-start;
     font-size: 12px;
   }
+}
+
+/* ---------- 추천 페이지 (recommend.html) ---------- */
+
+.rec-notes {
+  max-width: 760px;
+  margin: 20px auto 0;
+  padding: 16px 24px 16px 40px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-header-bg);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.rec-notes:empty,
+.rec-section[hidden],
+.rec-shades[hidden],
+.products-status[hidden] {
+  display: none;
+}
+
+.rec-section {
+  margin-top: 56px;
+}
+
+.rec-section__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.rec-section__status {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+.rec-grid {
+  margin-top: 20px;
+}
+
+.rec-group {
+  margin-top: 28px;
+}
+
+.rec-group__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.rec-group__note,
+.rec-shade-note {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.rec-shade-picks {
+  margin-top: 12px;
+}
+
+.rec-shade-picks__title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.rec-shade-picks .choices {
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.rec-shade-picks .choice span {
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+.rec-rank {
+  margin-right: 8px;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-hero-bg);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.rec-score {
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+.rec-score strong {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.rec-why {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.rec-why .is-off {
+  color: var(--color-muted);
+}
+
+.rec-pick {
+  margin-top: 12px;
+}
+
+.rec-card:has(input[name^="pick-"]:checked) .product-card__media {
+  border-color: var(--color-rose);
+  box-shadow: 0 0 0 2px var(--color-rose);
+}
+
+.rec-shades {
+  margin-top: 28px;
+}
+
+.rec-shades__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.rec-next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px 16px;
+}
+
+.rec-next__hint {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+/* v5 (2026-11-02): 퍼스널 컬러 미확인 안내, 환산 점수 줄, 피부 정보 미확인 목록, 제외 사유 */
+.rec-pc-notice {
+  margin: 8px 0 0;
+  padding: 6px 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: var(--color-card);
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.rec-why__total {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.rec-unknown {
+  margin-top: 28px;
+  padding: 16px;
+  border: 1px dashed var(--color-sand);
+  border-radius: 12px;
+}
+
+.rec-unknown__list,
+.rec-excluded__list {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+
+.rec-excluded {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.rec-excluded summary {
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+/* v6 (2026-11-02): 대표·보조 무드 배지, 색감 설명 */
+.rec-badge {
+  display: inline-block;
+  align-self: flex-start;
+  width: fit-content;
+  margin: 8px 0 0;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.rec-badge.is-primary {
+  background: var(--color-button);
+  color: var(--color-on-button);
+}
+
+.rec-badge.is-secondary {
+  border: 1px solid var(--color-rose);
+  color: var(--color-text);
+}
+
+.rec-color-note {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.result-pc-note {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+/* v7 (2026-11-02): 색감 근거 보완 후보 · 검수 후보 · product_id·색상 상태 */
+.rec-product-id {
+  margin: 2px 0 0;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--color-muted);
+}
+
+.rec-color-status {
+  margin-left: 6px;
+}
+
+.rec-color-note.is-off {
+  color: var(--color-muted);
+}
+
+.rec-badge.is-evidence {
+  border: 1px dashed var(--color-rose);
+  color: var(--color-text);
+}
+
+.rec-evidence {
+  margin: 6px 0 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--color-hero-bg);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.rec-group--evidence {
+  padding: 16px;
+  border: 1px dashed var(--color-rose);
+  border-radius: 12px;
+}
+
+.rec-card--evidence .product-card__media {
+  outline: 1px dashed var(--color-rose);
+  outline-offset: -1px;
+}
+
+.rec-review {
+  margin-top: 28px;
+  padding: 16px;
+  border: 1px dashed var(--color-sand);
+  border-radius: 12px;
+}
+
+.rec-review__list {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+
+.rec-extra {
+  max-width: 1040px;
+  margin: 36px auto 0;
+  padding: 20px;
+  border: 1px dashed var(--color-rose);
+  border-radius: 12px;
+  background: var(--color-hero-bg);
+}
+
+.rec-extra[hidden],
+.rec-extra__group[hidden] {
+  display: none;
+}
+
+.rec-extra__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.rec-extra__lead {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+.rec-extra__group {
+  margin-top: 20px;
+}
+
+.rec-extra__group .rec-review {
+  margin-top: 16px;
+}
+
+.rec-sim-status {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.rec-sim-status.is-off {
+  color: var(--color-muted);
+  font-weight: 500;
+}
+
+.rec-product-link {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.rec-extra-pointer a {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+/* ---------- 고객 화면 (기본, 2026-11-02) ----------
+   내부 추천 점수·계산식·검수/근거·색값(HEX)·product_id는 고객 화면에서 숨깁니다.
+   DOM에는 남아 있어 테스트가 읽을 수 있고, 주소에 ?view=dev를 붙이면(js/data-mode.js가 html.view-dev 추가) 모두 다시 보입니다. */
+html:not(.view-dev) #rec-notice,
+html:not(.view-dev) #rec-notes,
+html:not(.view-dev) #rec-extra,
+html:not(.view-dev) .rec-group__title,
+html:not(.view-dev) .rec-group__note,
+html:not(.view-dev) .rec-product-id,
+html:not(.view-dev) .rec-pc-notice,
+html:not(.view-dev) .rec-shade-note,
+html:not(.view-dev) .rec-score,
+html:not(.view-dev) .rec-why,
+html:not(.view-dev) .rec-excluded,
+html:not(.view-dev) .rec-unknown,
+html:not(.view-dev) .rec-color-note.is-off,
+html:not(.view-dev) .rec-sim-status,
+html:not(.view-dev) .product-card__review,
+html:not(.view-dev) .result-pick__id,
+html:not(.view-dev) .result-pick__color,
+html:not(.view-dev) .result-pick__sim,
+html:not(.view-dev) .result-pc-note,
+html:not(.view-dev) .result-palette,
+html:not(.view-dev) #result-notice {
+  display: none !important;
+}
+
+/* 개발 화면에서는 고객용 문구를 숨겨 기존 정보와 겹치지 않게 합니다 */
+html.view-dev .result-pick__mood-note,
+html.view-dev .result-pick__preview {
+  display: none;
+}
+
+.result-pick__mood-note {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.result-pick__preview {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.result-pick__preview.is-off {
+  color: var(--color-muted);
 }

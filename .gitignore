@@ -13,8 +13,19 @@ __pycache__/
 # Node.js (추후 사용 시)
 node_modules/
 
-# 저장소에 올리지 않는 참고 자료 (원본 디자인 시안 등)
+# 저장소에 올리지 않는 참고 자료 (원본 디자인 시안, 작업 전 백업, 공식 발색 참고 이미지 등)
 docs/reference/
+
+# 배포 대상이 아닌 내부 도구 (로컬에만 둠, 2026-11-02)
+# - 색상 검토 도구: Git 제외 폴더 docs/reference/의 측정 이미지를 읽어 배포 주소에서는 동작하지 않음
+color-review.html
+css/color-review.css
+js/color-review-page.js
+data/color-measurements.csv
+# - 개발용 스크립트·글꼴 비교 페이지
+dev/
+# - 사용하지 않는 예전 제품 이미지 (사이트는 MD-0034-01-v2.png 사용)
+assets/products/romand/MD-0034-01.png
 
 # 운영체제와 편집기가 만드는 파일
 *:Zone.Identifier

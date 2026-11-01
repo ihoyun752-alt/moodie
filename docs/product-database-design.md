@@ -40,6 +40,8 @@ Moodie의 맞춤 화장품 TOP 3 추천에 쓸 제품 데이터의 컬럼 구조
 
 요청한 기본 컬럼에 **추가하거나 바꾼 컬럼은 "변경" 열에 표시**하고, 이유는 4절에 적었습니다.
 
+> 2026-11-02: 출처·톤·무드 상태 칸 9개(57~65열)와 새 데이터 파일 4개가 추가되었습니다. 10절을 보세요. `personal_color` 허용값 추가(`summer-soft`, `autumn-soft`, `cool`, `warm`)도 10.3절에 있습니다.
+
 ### ① 기본 제품 정보
 
 | 컬럼 | 의미 | 형식 | 필수 | 입력 예시 | 변경 |
@@ -308,6 +310,14 @@ Moodie의 맞춤 화장품 TOP 3 추천에 쓸 제품 데이터의 컬럼 구조
 
 ### 점수 계산
 
+> **변경 이력 (2026-11-01): 이 절의 점수 규칙은 대체되었습니다. 최신 규칙은 `docs/recommendation-engine-plan.md` 3절입니다.**
+> - 가중치 40/30/20/10 → **무드 40 · 퍼스널 컬러 40 · 피부 20, 인기도 제외**
+> - "null이면 기여 0" → **빈 값은 0점으로 계산하지 않고 추천에서 제외**(가중치 재분배 없음)
+> - 퍼스널 컬러 중간 점수 → **0.7**, 사용자 unknown → **항목 미반영**(기준 점수 표시)
+> - 피부: "tags면 높은 점수, 아니면 `skin_suitability`" → **추천 타입 1.0 · 주의 0.0 · 둘 다 아님 0.5**, 타입·고민 50:50, `na`/빈칸 구분
+> - "TOP 3 고르기" → **추천 대상 전체 표시(개수 제한 없음)**, 같은 제품은 최고점 셰이드 하나, 동점은 공동 순위
+> - 아래 원래 내용은 기록으로 남겨 둡니다.
+
 ```
 최종 점수 = 0.40 × 무드 + 0.30 × 퍼스널 컬러 + 0.20 × 피부 + 0.10 × 인기도
 ```
@@ -356,6 +366,108 @@ Moodie의 맞춤 화장품 TOP 3 추천에 쓸 제품 데이터의 컬럼 구조
 - **승인 비율 보고:** 묶음이 끝날 때마다 `approved` / `pending` / `needs-revision` / `rejected` 수와 컬럼별 null 비율을 기록합니다.
 - **변경 기록:** 승인된 행을 고칠 때는 `review_notes`에 무엇을 왜 바꿨는지 남깁니다. `product_id`는 바꾸지 않습니다.
 - **출처 이용 조건:** 공개 데이터셋이나 판매처 정보를 쓸 때는 이용 조건을 먼저 확인합니다. 확인되지 않은 출처의 값은 넣지 않습니다.
+
+## 10. 근거 분리와 확장 필드 (v5, 2026-11-02 승인)
+
+> 이 절은 2026-11-02에 승인된 최종 설계(v5)입니다. 위 절과 다르면 이 절을 따릅니다. 위 절의 원래 내용은 기록으로 남겨 둡니다.
+> 추천 계산 규칙은 `docs/recommendation-engine-plan.md` 7절, 얼굴 색 적용은 `docs/simulation-design.md`를 따릅니다.
+
+### 10.1 원칙
+
+- `products.csv`에는 **엔진이 읽는 정규화된 값과 출처 종류만** 저장합니다.
+- 원문과 출처(페이지, 확인일, 기록자)는 `data/evidence.csv`에 **한 줄씩 쌓고 덮어쓰지 않습니다.** 같은 셰이드에 올리브영 상세페이지, 브랜드 공식몰, 담당자 분석처럼 근거가 여러 개 있어도 각각 따로 남깁니다.
+- 기존 56열과 69행은 그대로 둡니다. **기존 1~56열의 값은 한 글자도 바꾸지 않고**, 새 칸은 맨 뒤(57~65열)에 붙입니다. 총 65열입니다.
+- `tag_source`는 지우지 않고 기록용으로 남깁니다. 엔진은 읽지 않으며, 앞으로는 아래 `*_source` 칸을 씁니다.
+- 셰이드 이름은 바꾸지 않습니다. 예: `MD-0014-02`의 `앙꼬 모브`는 CSV 표기가 맞습니다(2026-11-02 담당자 확인).
+
+### 10.2 `products.csv` 추가 칸 (57~65열)
+
+| 열 | 컬럼 | 허용값 | 의미 |
+|---|---|---|---|
+| 57 | `personal_color_source` | `official` / `human` / 빈 칸 | `personal_color` 근거의 종류. `official` = 브랜드가 제공한 정보(공식몰 또는 판매처 상세페이지에 실린 브랜드 제공 정보) |
+| 58 | `personal_color_basis` | `explicit` / `interpreted` / 빈 칸 | 원문에 계절·유형이 명시됐는지(`explicit`), 원문 표현을 규칙으로 정규화했는지(`interpreted`) |
+| 59 | `tone_temperature` | `warm` / `cool` / `neutral` / 빈 칸 | 원문의 웜·쿨·뉴트럴 표현 |
+| 60 | `tone_value` | `light`, `deep` (여러 개면 `\|`) / 빈 칸 | 원문의 명도 표현 |
+| 61 | `tone_chroma` | `mute`, `soft`, `bright` (여러 개면 `\|`) / 빈 칸 | 원문의 채도 표현. **`soft`와 `mute`는 다른 값** |
+| 62 | `mood_source` | `official` / `human` / 빈 칸 | 승인된 무드 점수의 근거 종류 |
+| 63 | `mood_status` | `approved` / 빈 칸 | `mood_*` 칸의 값이 승인된 값인지. 엔진은 `approved`일 때만 무드 점수를 씀 |
+| 64 | `skin_source` | `official` / `human` / 빈 칸 | 피부 태그 근거의 종류 |
+| 65 | `skin_basis` | `explicit` / `interpreted` / 빈 칸 | 피부 태그가 원문 그대로인지, "모든 피부"처럼 규칙으로 해석했는지 |
+
+- 칸이 비어 있으면 "근거 없음"입니다. 다른 칸의 값으로 추측해 채우지 않습니다.
+- `tone_*` 칸은 원문에 그 표현이 있을 때만 채웁니다.
+
+### 10.3 퍼스널 컬러 정규화 (`personal_color`)
+
+엔진이 읽는 값은 5절 허용값에 아래 4개를 더합니다.
+
+| 추가 값 | 의미 | 사용 조건 |
+|---|---|---|
+| `summer-soft`, `autumn-soft` | 원문의 "여름 소프트", "가을 소프트" | **제품에만** 씀. 프로필 선택지가 아니므로 사용자와 정확히 일치하지 않음. `summer-mute`, `autumn-mute`로 바꾸지 않음 |
+| `cool`, `warm` | 원문이 계절 없이 "쿨톤", "웜톤"만 밝힌 경우 (쿨톤 전체, 웜톤 전체) | 계절이나 세부 유형을 추측해 만들지 않음 |
+
+**제품의 퍼스널 컬러 상태 6가지**
+
+| # | 상태 | `personal_color` | `tone_temperature` |
+|---|---|---|---|
+| 1 | 세부 유형 확인 | 예: `summer-light` | 원문에 있으면 기록 |
+| 2 | 계절만 확인 | 예: `summer` | 원문에 있으면 기록 |
+| 3 | 쿨·웜만 확인 | `cool` 또는 `warm` | `cool` 또는 `warm` |
+| 4 | 뉴트럴 | 빈 칸 | `neutral` |
+| 5 | universal | `universal` (5절 정의 그대로: 퍼스널 컬러와 거의 상관없는 제품) | 빈 칸 |
+| 6 | 미확인 | 빈 칸 | 빈 칸 |
+
+- 한 셰이드에 여러 상태가 함께 있으면 `|`로 나열합니다. 예: "가을 뮤트, 웜톤 전체" → `autumn-mute|warm`.
+- **neutral은 universal로 바꾸지 않습니다.**
+- `universal`은 다른 값과 함께 쓰지 않습니다. 함께 있으면 데이터 오류입니다 (2026-11-02 확정).
+- `tone_temperature = neutral`인 행의 `personal_color`에 값이 있으면 데이터 오류로 표시하고 임의로 고치지 않습니다 (2026-11-02 확정).
+- 상태 3(쿨·웜만)은 세부 유형과 비교할 수 없는 제품으로 별도 관리하며 점수를 주지 않습니다 (`docs/recommendation-engine-plan.md` 7.3.1).
+- `personal_color`의 계절과 `tone_temperature`가 서로 맞지 않으면 데이터 오류입니다. 예: `summer`인데 `warm`.
+- 원문, 정규화한 값, 정규화 방법은 `evidence.csv`의 `raw_text`, `normalized_value`, `mapping_note`에 남깁니다.
+
+### 10.4 피부 태그 해석
+
+- 공식 문구가 **"모든 피부"**이면 `skin_type_tags = dry|normal|oily|combination`, `skin_basis = interpreted`로 기록합니다.
+- **`sensitive`는 민감 피부를 따로 밝힌 공식 근거가 있을 때만** 넣습니다. "모든 피부"만으로는 넣지 않습니다.
+- 제품 종류(쿠션, 파운데이션)만으로 피부 적합성을 판단하지 않습니다. 공식 문구에 확인된 피부 타입, 유분 조절, 모공 커버, 보습 같은 정보만 씁니다.
+- 피부 정보가 없으면 빈 칸입니다. 빈 칸은 "부적합"이 아니라 "미확인"입니다.
+
+### 10.5 새 데이터 파일
+
+| 파일 | 한 줄의 단위 | 컬럼 |
+|---|---|---|
+| `data/evidence.csv` | 근거 1건 (추가만 하고 수정·삭제하지 않음) | `evidence_id`, `product_id`, `domain`(`personal_color` / `skin` / `mood` / `color` / `name`), `source`(`official` / `human`), `source_type`(`brand-provided` / `retailer-own` / `measured` / `analysis`), `source_page`, `raw_text`(원문 그대로), `normalized_value`, `mapping_note`, `checked_at`, `recorded_by` |
+| `data/mood-review.csv` | 무드 점수 제안 1건 (셰이드 × 무드) | `review_id`, `product_id`, `mood`, `proposed_score`, `status`(`pending` / `approved` / `rejected` / `hold`), `source`, `evidence`, `match_status`(`confirmed` / `needs-check`), `proposed_at`, `decided_by`, `decided_at`, `decision_note` |
+| `data/simulation-colors.csv` | 셰이드 1개의 얼굴 적용 설정 (부위별 1줄) | `docs/simulation-design.md` 3절 |
+| `data/simulation-masks.csv` | 기준 얼굴 이미지의 영역 마스크 1개 | `docs/simulation-design.md` 2절 |
+
+- `mood-review.csv`에서 `status = approved`인 줄만 `products.csv`의 `mood_*` 칸으로 옮깁니다. 이때 `mood_source`, `mood_status = approved`도 함께 기록합니다. `pending`, `hold`, `rejected` 점수는 엔진이 쓰지 않습니다.
+- `match_status = needs-check`인 제안은 승인할 수 없습니다. 제품명·ID 연결부터 확인합니다.
+- 기존 [임시 무드] 기록과 새 제안이 달라도 기존 기록(`review_notes`)은 지우지 않습니다.
+- 데모용 가상 값은 `products.csv`와 섞지 않습니다. 데모 CSV는 원본에 데모용 덮어쓰기 파일을 합쳐 만들고, 가상 값은 진행 상태(`review_status`, `is_available`)에만 씁니다.
+
+### 10.6 검증 규칙
+
+- `products.csv`: 헤더 65열, 모든 행 65열, 기존 1~56열 값은 변경 전과 칸 단위로 같아야 함, 새 칸은 허용값만 사용
+- `evidence.csv`: 기존 줄의 내용이 바뀌거나 지워지지 않아야 함
+- `mood-review.csv`: `product_id`와 `mood`가 실제로 있는 값이어야 함
+- 새 칸이 없는 옛 CSV(56열)도 읽을 수 있어야 함 (새 칸은 빈 칸으로 간주)
+
+## 11. 무드 태그 칸 (v6, 2026-11-02)
+
+`products.csv` 맨 뒤에 5칸을 추가했습니다(65 → 70열). 기존 칸은 바꾸지 않습니다.
+
+| 열 | 컬럼 | 허용값 | 의미 |
+|---|---|---|---|
+| 66 | `mood_primary` | 7개 무드 코드 1개 이상 (`\|` 구분) | 대표 무드 |
+| 67 | `mood_secondary` | 0개 이상 | 보조 무드 |
+| 68 | `mood_tag_status` | `approved` / 빈 칸 | 엔진은 `approved`만 사용 |
+| 69 | `mood_tag_source` | `human` / `official` | 무드 판단 출처 |
+| 70 | `color_note` | 문자열 | 공식 색감 설명 요약(원문은 `evidence.csv`) |
+
+- 태그 제안·결정 기록: `data/mood-tag-review.csv` (`review_id`, `product_id`, `mood_primary`, `mood_secondary`, `color_note`, `status`, `source`, `evidence_ref`, `match_status`, `order_check`, `proposed_at`, `decided_by`, `decided_at`, `note`). `approved`인 줄만 `products.csv`에 반영합니다.
+- 기존 `mood_*` 점수 칸과 `mood_status`, `data/mood-review.csv`는 이전 방식의 기록으로 보존하며 엔진은 읽지 않습니다.
+- 프로필 퍼스널 컬러에 `neutral`(뉴트럴톤)이 추가되었습니다. 사용자 쪽 값이며 제품의 `personal_color`에는 쓰지 않습니다(제품 뉴트럴은 `tone_temperature = neutral`).
 
 ## 다음 단계
 

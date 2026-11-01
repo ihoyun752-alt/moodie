@@ -1,0 +1,19 @@
+product_id,area,sim_hex,color_source,source_image,measure_box,blend_mode,opacity,gloss,shimmer,gradient,status,approved_by,approved_at
+MD-0001-01,lip,#C9554D,swatch-measured,NNEditor/20230905/제로매트립스틱리뉴얼상세06_공홈1.jpg,,,,,,,approved,담당자,2026-11-01
+MD-0001-02,lip,#E7836E,swatch-measured,NNEditor/20230905/제로매트립스틱리뉴얼상세06_공홈1.jpg,,,,,,,approved,담당자,2026-11-01
+MD-0001-03,lip,#882427,swatch-measured,NNEditor/20230905/제로매트립스틱리뉴얼상세06_공홈2.jpg,,,,,,,approved,담당자,2026-11-01
+MD-0004-01,lip,#C25049,swatch-measured,NNEditor/20230905/210927_듀이풀워터틴트-상세페이지2_01.jpg,"(550,2528)-(710,2564)",,,,,,approved,담당자,2026-11-01
+MD-0005-01,lip,#ED7689,swatch-measured,NNEditor/20230905/글래스팅멜팅밤_01_07.jpg,,,,,,,approved,담당자,2026-11-01
+MD-0005-02,lip,#D56E6E,swatch-measured,NNEditor/20230905/글래스팅멜팅밤_01_07.jpg,,,,,,,approved,담당자,2026-11-01
+MD-0034-01,eyelid-l,#BF896D,swatch-measured,NNEditor/20230901/베러댄팔레트-상세페이지(기존+쿨누드)28.jpg,"(750,4206)-(810,4215)",,,,,,approved,담당자,2026-11-01
+MD-0034-01,eyelid-r,#BF896D,swatch-measured,NNEditor/20230901/베러댄팔레트-상세페이지(기존+쿨누드)28.jpg,"(750,4206)-(810,4215)",,,,,,approved,담당자,2026-11-01
+MD-0016-01,cheek-l,#EFADAF,swatch-measured,docs/reference/official-swatches/naming/blurry-cheek-milky-muted-chart.jpg,"(126,663)-(521,821)",color,0.85,,,,approved,사용자 지시 (색상 검토 확인),2026-11-02
+MD-0016-01,cheek-r,#EFADAF,swatch-measured,docs/reference/official-swatches/naming/blurry-cheek-milky-muted-chart.jpg,"(126,663)-(521,821)",color,0.85,,,,approved,사용자 지시 (색상 검토 확인),2026-11-02
+MD-0016-02,cheek-l,#D5A3AF,swatch-measured,docs/reference/official-swatches/naming/blurry-cheek-milky-muted-chart.jpg,"(126,1429)-(521,1587)",color,0.85,,,,approved,사용자 지시 (색상 검토 확인),2026-11-02
+MD-0016-02,cheek-r,#D5A3AF,swatch-measured,docs/reference/official-swatches/naming/blurry-cheek-milky-muted-chart.jpg,"(126,1429)-(521,1587)",color,0.85,,,,approved,사용자 지시 (색상 검토 확인),2026-11-02
+MD-0013-01,cheek-l,#E39D9E,swatch-measured,docs/reference/official-swatches/losykim/vol-mellow-02-mellow-swatch.jpg,"(400,450)-(650,700)",color,0.85,,,,approved,사용자 지시 (색상 검토 확인),2026-11-02
+MD-0013-01,cheek-r,#E39D9E,swatch-measured,docs/reference/official-swatches/losykim/vol-mellow-02-mellow-swatch.jpg,"(400,450)-(650,700)",color,0.85,,,,approved,사용자 지시 (색상 검토 확인),2026-11-02
+MD-0013-02,cheek-l,#D18182,swatch-measured,docs/reference/official-swatches/losykim/vol-mellow-blushing-serum-chart.jpg,"(120,1530)-(210,1610)",color,0.85,,,,approved,사용자 지시 (색상 검토 확인),2026-11-02
+MD-0013-02,cheek-r,#D18182,swatch-measured,docs/reference/official-swatches/losykim/vol-mellow-blushing-serum-chart.jpg,"(120,1530)-(210,1610)",color,0.85,,,,approved,사용자 지시 (색상 검토 확인),2026-11-02
+MD-0012-03,lip,#DC9B9A,ai-image-estimate,assets/products/losykim/MD-0012-03.png,,,,,,,approved,담당자 지시 (AI 제품 이미지 추정값 · 공식 HEX 아님),2026-11-02
+MD-0028-01,skin,#FEE2CC,ai-image-estimate,assets/products/aprilskin/MD-0028.png,"(400,190)-(470,260)",,,,,,approved,담당자 지시 (estimated · AI 제품 이미지 바른 자국 추정값 · 공식 HEX 아님),2026-11-02

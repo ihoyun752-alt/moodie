@@ -1,0 +1,27 @@
+product_id,category,pan_index,pan_name,pan_hex,tone_role,source,source_image,status,note
+MD-0034-01,eye,1,Matte Sand,#F2C5AB,base,docs/product-color-draft.md 5절,NNEditor/20230901/베러댄팔레트-상세페이지(기존+쿨누드)30.jpg,reference,공식 발색 이미지 칸 질감 측정 참고값 · 시뮬레이션 미승인
+MD-0034-01,eye,2,Soft Beige,#E7AD86,base,docs/product-color-draft.md 5절,NNEditor/20230901/베러댄팔레트-상세페이지(기존+쿨누드)30.jpg,reference,공식 발색 이미지 칸 질감 측정 참고값 · 시뮬레이션 미승인
+MD-0034-01,eye,3,Rose Shadow,#E0AB8F,mid,docs/product-color-draft.md 5절,NNEditor/20230901/베러댄팔레트-상세페이지(기존+쿨누드)30.jpg,reference,공식 발색 이미지 칸 질감 측정 참고값 · 시뮬레이션 미승인
+MD-0034-01,eye,4,Brown Ground,#926E56,shade,docs/product-color-draft.md 5절,NNEditor/20230901/베러댄팔레트-상세페이지(기존+쿨누드)30.jpg,reference,공식 발색 이미지 칸 질감 측정 참고값 · 시뮬레이션 미승인
+MD-0034-01,eye,5,Chocolate Mud,#6E4D3A,deep,docs/product-color-draft.md 5절,NNEditor/20230901/베러댄팔레트-상세페이지(기존+쿨누드)30.jpg,reference,공식 발색 이미지 칸 질감 측정 참고값 · 시뮬레이션 미승인
+MD-0034-01,eye,6,White Pebble,#FADBC4,highlight,docs/product-color-draft.md 5절,NNEditor/20230901/베러댄팔레트-상세페이지(기존+쿨누드)30.jpg,reference,공식 발색 이미지 칸 질감 측정 참고값 · 시뮬레이션 미승인
+MD-0034-01,eye,7,Sand Scent,#D9B4A0,mid,docs/product-color-draft.md 5절,NNEditor/20230901/베러댄팔레트-상세페이지(기존+쿨누드)30.jpg,reference,공식 발색 이미지 칸 질감 측정 참고값 · 시뮬레이션 미승인
+MD-0034-01,eye,8,Nudy Grey,#AE8166,shade,docs/product-color-draft.md 5절,NNEditor/20230901/베러댄팔레트-상세페이지(기존+쿨누드)30.jpg,reference,공식 발색 이미지 칸 질감 측정 참고값 · 시뮬레이션 미승인
+MD-0034-01,eye,9,Mauve Silhouette,#CD9786,accent,docs/product-color-draft.md 5절,NNEditor/20230901/베러댄팔레트-상세페이지(기존+쿨누드)30.jpg,reference,공식 발색 이미지 칸 질감 측정 참고값 · 시뮬레이션 미승인
+MD-0034-01,eye,10,Evening Shade,#A06551,deep,docs/product-color-draft.md 5절,NNEditor/20230901/베러댄팔레트-상세페이지(기존+쿨누드)30.jpg,reference,공식 발색 이미지 칸 질감 측정 참고값 · 시뮬레이션 미승인
+MD-0032-02,eye,1,멜팅 슈가,,,docs/eyeshadow-product-research.md 45행,,name-only,공식 조사 자료의 칸 이름만 확인 · 색상값 없음 · 시뮬레이션 미적용
+MD-0032-02,eye,2,요거트 슈,,,docs/eyeshadow-product-research.md 45행,,name-only,공식 조사 자료의 칸 이름만 확인 · 색상값 없음 · 시뮬레이션 미적용
+MD-0032-02,eye,3,스노우 베리,,,docs/eyeshadow-product-research.md 45행,,name-only,공식 조사 자료의 칸 이름만 확인 · 색상값 없음 · 시뮬레이션 미적용
+MD-0032-02,eye,4,아이시 베리,,,docs/eyeshadow-product-research.md 45행,,name-only,공식 조사 자료의 칸 이름만 확인 · 색상값 없음 · 시뮬레이션 미적용
+MD-0032-02,eye,5,크림 핑크,,,docs/eyeshadow-product-research.md 45행,,name-only,공식 조사 자료의 칸 이름만 확인 · 색상값 없음 · 시뮬레이션 미적용
+MD-0032-02,eye,6,밀크 코코아,,,docs/eyeshadow-product-research.md 45행,,name-only,공식 조사 자료의 칸 이름만 확인 · 색상값 없음 · 시뮬레이션 미적용
+MD-0032-02,eye,7,얼그레이 쉬폰,,,docs/eyeshadow-product-research.md 45행,,name-only,공식 조사 자료의 칸 이름만 확인 · 색상값 없음 · 시뮬레이션 미적용
+MD-0032-02,eye,8,벨벳 브라운,,,docs/eyeshadow-product-research.md 45행,,name-only,공식 조사 자료의 칸 이름만 확인 · 색상값 없음 · 시뮬레이션 미적용
+MD-0032-02,eye,9,라즈베리 스프링클,,,docs/eyeshadow-product-research.md 45행,,name-only,공식 조사 자료의 칸 이름만 확인 · 색상값 없음 · 시뮬레이션 미적용
+MD-0032-02,eye,10,더블 초코,,,docs/eyeshadow-product-research.md 45행,,name-only,공식 조사 자료의 칸 이름만 확인 · 색상값 없음 · 시뮬레이션 미적용
+MD-0030-01,eye,1,"윗줄 왼쪽 (쉘 하이라이트, 추정)",#FDD6CE,highlight,ai-image-estimate (estimated · 공식 HEX 아님),assets/products/2an/MD-0030-01.png,approved,AI 제품 이미지 칸 중앙 RGB 중앙값 · 담당자 지시로 시뮬레이션 적용(2026-11-02) · 칸 이름은 공식 이름이 아닌 설명
+MD-0030-01,eye,2,"윗줄 가운데 (핑크 매트, 추정)",#FBC0C0,base,ai-image-estimate (estimated · 공식 HEX 아님),assets/products/2an/MD-0030-01.png,approved,AI 제품 이미지 칸 중앙 RGB 중앙값 · 담당자 지시로 시뮬레이션 적용(2026-11-02) · 칸 이름은 공식 이름이 아닌 설명
+MD-0030-01,eye,3,"윗줄 오른쪽 (핑크 글리터, 추정)",#FBC8CF,accent,ai-image-estimate (estimated · 공식 HEX 아님),assets/products/2an/MD-0030-01.png,approved,AI 제품 이미지 칸 중앙 RGB 중앙값 · 담당자 지시로 시뮬레이션 적용(2026-11-02) · 칸 이름은 공식 이름이 아닌 설명
+MD-0030-01,eye,4,"아랫줄 왼쪽 (로즈, 추정)",#F0A6AD,mid,ai-image-estimate (estimated · 공식 HEX 아님),assets/products/2an/MD-0030-01.png,approved,AI 제품 이미지 칸 중앙 RGB 중앙값 · 담당자 지시로 시뮬레이션 적용(2026-11-02) · 칸 이름은 공식 이름이 아닌 설명
+MD-0030-01,eye,5,"아랫줄 가운데 (모브, 추정)",#C58B8B,shade,ai-image-estimate (estimated · 공식 HEX 아님),assets/products/2an/MD-0030-01.png,approved,AI 제품 이미지 칸 중앙 RGB 중앙값 · 담당자 지시로 시뮬레이션 적용(2026-11-02) · 칸 이름은 공식 이름이 아닌 설명
+MD-0030-01,eye,6,"아랫줄 오른쪽 (브라운, 추정)",#7E564C,deep,ai-image-estimate (estimated · 공식 HEX 아님),assets/products/2an/MD-0030-01.png,approved,AI 제품 이미지 칸 중앙 RGB 중앙값 · 담당자 지시로 시뮬레이션 적용(2026-11-02) · 칸 이름은 공식 이름이 아닌 설명
