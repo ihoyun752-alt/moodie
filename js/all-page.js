@@ -1,4 +1,4 @@
-// ALL 페이지: data/products.csv의 실제 제품을 카드로 보여 줍니다 (셰이드 1개 = 카드 1장).
+// ALL 페이지: data/products.csv의 실제 제품을 카드로 보여 줍니다 (립·치크는 셰이드 1개 = 카드 1장, 베이스는 제품 1개 = 카드 1장).
 // 공식 페이지에서 확인한 기본 정보만 표시하고, 비어 있는 값은 채우지 않습니다. 무드·추천 점수는 표시하지 않습니다.
 // 사진은 docs/product-database-design.md 5·8절 기준(경로·종류·출처·허락 근거·확인일)을 모두 갖춘 것만 보여 주고,
 // 그렇지 않거나 불러오지 못하면 CSS로 그린 "샘플 이미지"를 보여 줍니다. 반려(rejected)된 행은 보여 주지 않습니다.
@@ -195,16 +195,20 @@
     body.appendChild(el("h2", "product-card__name", orEmpty(p.product_name)));
 
     // 셰이드: [색상칩] 번호 셰이드명. 칩은 검증된 HEX가 있을 때만 그립니다.
+    // 한 카드로 묶은 베이스 제품(p.shades)은 셰이드를 " · "로 이어서 모두 보여 줍니다.
     var shade = el("p", "product-card__shade");
-    var hex = verifiedHex(p);
-    if (hex) {
-      var chip = el("span", "product-card__chip");
-      chip.style.backgroundColor = hex;
-      chip.setAttribute("aria-hidden", "true");
-      shade.appendChild(chip);
-    }
-    if (p.shade_code) shade.appendChild(el("span", "product-card__shade-code", p.shade_code));
-    shade.appendChild(el("span", "product-card__shade-name", orEmpty(p.shade_name)));
+    (p.shades || [p]).forEach(function (s, i) {
+      if (i) shade.appendChild(document.createTextNode(" · "));
+      var hex = verifiedHex(s);
+      if (hex) {
+        var chip = el("span", "product-card__chip");
+        chip.style.backgroundColor = hex;
+        chip.setAttribute("aria-hidden", "true");
+        shade.appendChild(chip);
+      }
+      if (s.shade_code) shade.appendChild(el("span", "product-card__shade-code", s.shade_code));
+      if (s.shade_name || !s.shade_code) shade.appendChild(el("span", "product-card__shade-name", orEmpty(s.shade_name)));
+    });
     body.appendChild(shade);
 
     var swatch = renderSwatch(p);
@@ -232,6 +236,30 @@
 
     item.appendChild(body);
     return item;
+  }
+
+  // 베이스는 셰이드별 행을 같은 product_group_id끼리 카드 한 장으로 묶습니다(첫 행의 정보 + shades 목록).
+  // 립·치크는 지금처럼 셰이드 1개 = 카드 1장입니다.
+  function groupBaseShades(rows) {
+    var groups = {};
+    var result = [];
+    rows.forEach(function (p) {
+      if (p.category !== "base" || !p.product_group_id) {
+        result.push(p);
+        return;
+      }
+      var group = groups[p.product_group_id];
+      if (group) {
+        group.shades.push(p);
+        return;
+      }
+      group = {};
+      Object.keys(p).forEach(function (key) { group[key] = p[key]; });
+      group.shades = [p];
+      groups[p.product_group_id] = group;
+      result.push(group);
+    });
+    return result;
   }
 
   function showError() {
@@ -297,9 +325,9 @@
       return response.text();
     })
     .then(function (text) {
-      products = toRecords(parseCsv(text)).filter(function (p) {
+      products = groupBaseShades(toRecords(parseCsv(text)).filter(function (p) {
         return p.product_id && p.review_status !== "rejected";
-      });
+      }));
       updateCounts();
       render();
     })
