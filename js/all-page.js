@@ -16,9 +16,11 @@
   var REVIEW_LABEL = { pending: "검수 전", "needs-revision": "수정 중" };
   var NO_PRICE = "가격 정보 없음";
   // 이미지 종류 허용값 (설계 문서 5절 "이미지")
-  var IMAGE_TYPES = ["licensed", "own-photo"];
+  var IMAGE_TYPES = ["licensed", "own-photo", "ai-generated"];
+  // AI 생성 이미지에 항상 붙이는 안내 (설계 문서 8절 "화면 표시 기준")
+  var AI_NOTICE = "AI 생성 이미지 · 실제 제품 사진 아님";
   // 색상칩에 쓸 수 있는 HEX 출처 허용값 (설계 문서 5절 "관리용 코드")
-  var HEX_SOURCES = ["official", "retailer", "swatch-measured"];
+  var HEX_SOURCES = ["official", "retailer", "swatch-measured", "mixed"];
 
   // RFC 4180 방식의 CSV 해석: 큰따옴표로 감싼 칸 안의 쉼표·줄바꿈과 "" (따옴표 한 개)를 처리합니다.
   function parseCsv(text) {
@@ -111,7 +113,7 @@
       p[prefix + "_credit"] &&
       p[prefix + "_permission"] &&
       /^\d{4}-\d{2}-\d{2}$/.test(p[prefix + "_checked_at"]);
-    return ok ? { src: src, credit: p[prefix + "_credit"] } : null;
+    return ok ? { src: src, credit: p[prefix + "_credit"], isAi: p[prefix + "_type"] === "ai-generated" } : null;
   }
 
   // 색상칩: hex_color와 hex_source가 모두 확인된 경우에만 색을 돌려줍니다.
@@ -134,6 +136,7 @@
   }
 
   // 사진 영역: 검증된 제품 사진이 있으면 사진과 출처를, 없거나 불러오지 못하면 샘플 이미지를 보여 줍니다.
+  // AI 생성 이미지는 잘리지 않게 전체를 보여 주고, 이미지 아래에 "AI 생성 이미지 · 실제 제품 사진 아님" 안내를 붙입니다.
   function renderMedia(p) {
     var media = el("figure", "product-card__media");
     var photo = verifiedImage(p, "product_image");
@@ -142,14 +145,16 @@
       media.appendChild(sampleArt());
       return media;
     }
+    if (photo.isAi) media.classList.add("is-ai");
     var img = el("img", "product-card__photo");
     img.src = photo.src;
-    img.alt = productLabel(p) + " 제품 사진";
+    img.alt = productLabel(p) + (photo.isAi ? " AI 생성 이미지 (실제 제품 사진 아님)" : " 제품 사진");
     img.loading = "lazy";
     img.decoding = "async";
-    var caption = el("figcaption", "product-card__credit", photo.credit);
+    var caption = el("figcaption", "product-card__credit", photo.isAi ? AI_NOTICE : photo.credit);
     img.addEventListener("error", function () {
       if (window.console) window.console.warn("제품 사진을 불러오지 못해 샘플 이미지로 바꿉니다:", photo.src);
+      media.classList.remove("is-ai");
       media.classList.add("is-sample");
       media.replaceChild(sampleArt(), img);
       if (caption.parentNode) caption.parentNode.removeChild(caption);
@@ -166,7 +171,7 @@
     var figure = el("figure", "product-card__swatch");
     var img = el("img", "product-card__swatch-img");
     img.src = swatch.src;
-    img.alt = productLabel(p) + " 발색 사진";
+    img.alt = productLabel(p) + (swatch.isAi ? " AI 생성 발색 이미지" : " 발색 사진");
     img.loading = "lazy";
     img.decoding = "async";
     img.addEventListener("error", function () {

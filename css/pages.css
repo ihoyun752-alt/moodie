@@ -1560,6 +1560,24 @@
   object-fit: cover;
 }
 
+/* AI 생성 이미지: 4:5 틀 안에 이미지 전체를 잘림 없이(contain) 보여 주고, 안내 문구는 이미지 바로 아래 줄에 둡니다 */
+.product-card__media.is-ai {
+  aspect-ratio: auto;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.product-card__media.is-ai .product-card__photo {
+  aspect-ratio: 4 / 5;
+  height: auto;
+  object-fit: contain;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-card);
+}
+
 /* 사진 출처: 사진 위 아래쪽에 작게 */
 .product-card__media .product-card__credit {
   position: absolute;
@@ -1571,6 +1589,17 @@
   background: rgba(246, 241, 234, 0.88);
   font-size: 11px;
   color: var(--color-muted);
+}
+
+/* AI 생성 안내: 이미지 아래에 작게. 좁은 카드에서는 줄을 바꿉니다 */
+.product-card__media.is-ai .product-card__credit {
+  position: static;
+  max-width: none;
+  margin-top: 6px;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  line-height: 1.4;
 }
 
 /* 샘플 이미지: 실제 사진처럼 보이지 않도록 옅은 사선 무늬 바탕에 중립색 립 도형만 그립니다 (셰이드 색 아님) */
