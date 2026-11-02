@@ -14,54 +14,21 @@
   // 한 색상 행이 양쪽 영역에 함께 적용될 때 쓰는 별칭 (예: area=eyelid → 양 눈꺼풀)
   var AREA_ALIAS = { "eyelid-l": "eyelid", "eyelid-r": "eyelid", "cheek-l": "cheek", "cheek-r": "cheek" };
   var CATEGORY_LABEL = { lip: "립", cheek: "치크", eye: "아이섀도우", base: "베이스" };
-  // 팔레트 칸 역할(palette-colors.csv tone_role) → 눈두덩 영역 마스크 (eyelid-l-lid 등). 빈 값 = 눈두덩 전체.
-  var ROLE_ZONE = { base: "", mid: "lid", accent: "lid", shade: "crease", deep: "outer", highlight: "inner" };
-  // 칠하는 순서: 넓은 베이스 → 중간 → 음영 → 진한 음영 → 포인트 → 하이라이트
-  var ROLE_ORDER = { base: 0, mid: 1, shade: 2, deep: 3, accent: 4, highlight: 5 };
-  // 팔레트 칸 혼합 초기 설정 (미승인 초기값). palette-colors.csv에 blend_mode·opacity가 있으면 그 값을 씁니다.
-  var ROLE_STEP = {
-    base: { mode: "multiply", alpha: 0.35, fade: 0.6 },
-    mid: { mode: "multiply", alpha: 0.5, fade: 0.6 },
-    accent: { mode: "multiply", alpha: 0.5, fade: 0.6 },
-    shade: { mode: "multiply", alpha: 0.55 },
-    deep: { mode: "multiply", alpha: 0.6 },
-    highlight: { mode: "soft-light", alpha: 0.6 }
-  };
   // 혼합 초기 설정 (docs/simulation-design.md 4절). 실제 발색값이 아니며 미승인 초기값입니다.
   // simulation-colors.csv의 blend_mode·opacity 칸이 채워져 있으면 그 값을 씁니다.
   var ORDER = ["base", "cheek", "eye", "lip"]; // 베이스 → 치크 → 아이 → 립
   // shade: 영역의 명암(주름·광택)은 비율로 유지하고, 영역 평균 밝기를 제품 색에 맞추는 픽셀 단위 합성.
   //        캔버스 'color' 혼합은 원래 밝기를 그대로 둬서 진한 립(예: 딥 레드)이 실제보다 밝게 보여 바꿨습니다.
   //        원래 밝은 반사광(광택)은 덮지 않고 살려 색이 평평하게 칠해진 느낌을 줄입니다.
-  // 립 제형별 광택 보존 정도 (0 = 반사광도 제품 색으로 덮음, 1 = 반사광을 거의 그대로 둠). 초기 설정, 미승인.
-  // 매트 립스틱은 원래 입술의 반사광을 줄이고, 틴트·밤·글로스는 반사광을 살립니다.
-  var LIP_GLOSS = { lipstick: 0.3, tint: 0.75, "lip-balm": 0.85, gloss: 0.95 };
-  function lipGloss(row) {
-    var sub = row ? row.subcategory : "";
-    return Object.prototype.hasOwnProperty.call(LIP_GLOSS, sub) ? LIP_GLOSS[sub] : 0.7;
-  }
-
   function defaults(category, row) {
     if (category === "lip") {
       var matte = row && row.subcategory === "lipstick";
-      return [{ mode: "shade", alpha: matte ? 0.85 : 0.7, gloss: lipGloss(row) }];
+      return [{ mode: "shade", alpha: matte ? 0.85 : 0.7 }];
     }
-    // 아이: 눈꺼풀 영역은 속눈썹 그림자가 섞여 평균 밝기가 낮아 shade가 오히려 밝게 만들므로 multiply(덧입힘)를 씁니다.
-    // fade: 속눈썹 쪽(아래)을 진하게, 눈썹 쪽(위)을 옅게 (설계 문서 4절 lash-to-brow)
-    if (category === "eye") return [{ mode: "multiply", alpha: 0.85, fade: 0.4 }];
-    if (category === "cheek") return [{ mode: "soft-light", alpha: 0.3 }];
-    // 베이스: 립과 같은 픽셀 비율 합성(shade). 픽셀마다 명암 비율(모공·결·그림자)은 그대로 두고 피부 평균색만 제품 색 쪽으로 옮깁니다.
-    // 흐림·평활화는 하지 않아 피부 질감이 유지됩니다. skin 마스크는 눈·눈썹·입술·콧구멍을 제외합니다.
-    if (category === "base") return [{ mode: "shade", alpha: BASE_ALPHA, gloss: baseGloss(row) }];
+    // 아이: 눈꺼풀 전체에 애교살 부근까지 은은하게, 연한 핑크 느낌으로 고르게
+    if (category === "eye") return [{ mode: "multiply", alpha: 0.42, fade: 0.65 }];
+    if (category === "cheek") return [{ mode: "soft-light", alpha: 0.18 }];
     return [{ mode: "soft-light", alpha: 0.1 }];
-  }
-
-  // 베이스 강도와 마무리감별 광택 보존 정도 (초기 설정, 미승인). 매트일수록 원래 피부 광(반사광)을 조금 더 눌러 줍니다.
-  var BASE_ALPHA = 0.4;
-  var BASE_GLOSS = { matte: 0.55, "semi-matte": 0.7 };
-  function baseGloss(row) {
-    var fin = row ? row.finish : "";
-    return Object.prototype.hasOwnProperty.call(BASE_GLOSS, fin) ? BASE_GLOSS[fin] : 0.85;
   }
 
   function el(tag, className, text) {
@@ -114,16 +81,14 @@
   }
 
   // 픽셀 단위 합성: 결과 = 제품 색 × (픽셀 밝기 ÷ 영역 평균 밝기), 마스크 알파 × 강도만큼 섞음.
-  function shade(ctx, mask, hex, alpha, glossKeep) {
-    if (glossKeep === undefined || isNaN(glossKeep)) glossKeep = 0.7;
+  function shade(ctx, mask, hex, alpha) {
     var w = ctx.canvas.width;
     var h = ctx.canvas.height;
     var off = document.createElement("canvas");
     off.width = w;
     off.height = h;
     var o = off.getContext("2d");
-    // 입술 경계를 살짝 부드럽게 (스티커처럼 끊기는 느낌 완화). 이미 경계를 다듬은 베이스 마스크(data-soft)는 흐리지 않습니다.
-    o.filter = mask.getAttribute && mask.getAttribute("data-soft") ? "none" : "blur(1px)";
+    o.filter = "blur(1px)"; // 입술 경계를 살짝 부드럽게 (스티커처럼 끊기는 느낌 완화)
     o.drawImage(mask, 0, 0, w, h);
     o.filter = "none";
     var m = o.getImageData(0, 0, w, h).data;
@@ -182,7 +147,7 @@
         var mn = Math.min(d[k], d[k + 1], d[k + 2]);
         // 밝고 채도가 낮은 반사광(광택)은 제품 색을 덜 입혀 원래 빛 표현을 살립니다.
         var gloss = ratio > 1.15 && mx && (mx - mn) / mx < 0.3 ? Math.min(1, (ratio - 1.15) / 0.35) : 0;
-        a = (m[mi] / 255) * alpha * (1 - glossKeep * gloss);
+        a = (m[mi] / 255) * alpha * (1 - 0.7 * gloss);
         for (var c = 0; c < 3; c++) {
           var target = Math.min(255, d[k + c] * scale[c]);
           d[k + c] = Math.round(d[k + c] * (1 - a) + target * a);
@@ -220,60 +185,113 @@
     o.putImageData(img, 0, 0);
   }
 
-  // 베이스 전용 마스크 (브라우저 안에서만 만들고 원본 마스크 파일은 바꾸지 않음):
-  // 1) skin 마스크 안쪽으로만 경계를 넓게 흐려(바깥으로는 번지지 않음) 이마 위·턱선·목에 경계선이 생기지 않게 합니다.
-  // 2) 입술·눈꺼풀 마스크가 절반 이상인 곳은 0으로 빼서 그 부위 색이 바뀌지 않게 합니다.
-  // 3) skin 마스크가 턱 아래에서 얼굴 윤곽 밖 배경까지 조금 덮고 있어(약 2.9만 픽셀), 원본 사진에서 채도(최대−최소)가
-  //    낮은 배경색 픽셀은 뺍니다. 배경 채도 ≈ 11, 피부 채도 하위 1% ≈ 30 (2026-11-02 측정). 14 이하는 0, 24 이상은 그대로.
-  var BASE_EDGE_BLUR = 40;
-  var BASE_EXCLUDE = ["lip", "eyelid-l", "eyelid-r"];
-  var BASE_BG_CHROMA = [14, 24];
-  var baseMaskCache = null;
-  function baseMask(maskImg, photo) {
-    if (baseMaskCache && baseMaskCache.skin === maskImg.skin && baseMaskCache.photo === photo) return baseMaskCache.canvas;
-    var skin = maskImg.skin;
-    var w = skin.naturalWidth || skin.width;
-    var h = skin.naturalHeight || skin.height;
-    function alphaOf(img, blur) {
-      var c = document.createElement("canvas");
-      c.width = w;
-      c.height = h;
-      var x = c.getContext("2d");
-      if (blur) x.filter = "blur(" + blur + "px)";
-      x.drawImage(img, 0, 0, w, h);
-      return x.getImageData(0, 0, w, h).data;
-    }
-    var sharp = alphaOf(skin, 0);
-    var soft = alphaOf(skin, BASE_EDGE_BLUR);
-    var ex = BASE_EXCLUDE.filter(function (k) { return maskImg[k]; }).map(function (k) { return alphaOf(maskImg[k], 0); });
-    var src = alphaOf(photo, 0);
+
+  function maskAlpha(img) {
+    var w = img.naturalWidth || img.width;
+    var h = img.naturalHeight || img.height;
+    var c = document.createElement("canvas");
+    c.width = w;
+    c.height = h;
+    c.getContext("2d").drawImage(img, 0, 0, w, h);
+    return { w: w, h: h, d: c.getContext("2d").getImageData(0, 0, w, h).data };
+  }
+
+  function alphaCanvas(w, h, fn) {
     var out = document.createElement("canvas");
     out.width = w;
     out.height = h;
     var o = out.getContext("2d");
     var img = o.createImageData(w, h);
     var d = img.data;
-    for (var i = 3; i < d.length; i += 4) {
-      // 흐린 마스크가 절반(경계)인 곳에서 0, 안쪽으로 갈수록 1: 경계에서 계단이 생기지 않게 안쪽으로만 서서히 진해집니다.
-      var a = sharp[i] * Math.min(1, Math.max(0, (soft[i] / 255 - 0.5) * 2));
-      for (var j = 0; j < ex.length && a; j++) a *= Math.max(0, 1 - ex[j][i] / 128);
-      if (a) {
-        var chroma = Math.max(src[i - 3], src[i - 2], src[i - 1]) - Math.min(src[i - 3], src[i - 2], src[i - 1]);
-        a *= Math.min(1, Math.max(0, (chroma - BASE_BG_CHROMA[0]) / (BASE_BG_CHROMA[1] - BASE_BG_CHROMA[0])));
-      }
-      d[i - 3] = 255;
-      d[i - 2] = 255;
-      d[i - 1] = 255;
-      d[i] = Math.round(a);
+    for (var p = 0, i = 0; p < w * h; p++, i += 4) {
+      d[i] = d[i + 1] = d[i + 2] = 255;
+      d[i + 3] = fn(p);
     }
     o.putImageData(img, 0, 0);
-    out.setAttribute("data-soft", "1");
-    baseMaskCache ={ skin: maskImg.skin, photo: photo, canvas: out };
     return out;
   }
 
-  function tint(ctx, mask, hex, mode, alpha, fade, gloss) {
-    if (mode === "shade") return shade(ctx, mask, hex, alpha, gloss);
+  var cheekCache = {};
+
+  function cheekMask(maskImg, area) {
+    if (cheekCache[area] && cheekCache[area].src === maskImg[area]) {
+      return cheekCache[area].canvas;
+    }
+
+    var m = maskAlpha(maskImg[area]);
+    var w = m.w, h = m.h, sx = 0, sy = 0, sw = 0;
+    var x0 = w, x1 = 0, y0 = h, y1 = 0;
+
+    for (var p = 0; p < w * h; p++) {
+      var a = m.d[p * 4 + 3];
+      if (a < 20) continue;
+      var x = p % w, y = (p - x) / w;
+      sx += x * a;
+      sy += y * a;
+      sw += a;
+      if (x < x0) x0 = x;
+      if (x > x1) x1 = x;
+      if (y < y0) y0 = y;
+      if (y > y1) y1 = y;
+    }
+
+    if (!sw) return maskImg[area];
+
+    var side = area === "cheek-l" ? -1 : 1;
+    var bw = x1 - x0, bh = y1 - y0;
+    var cx = sx / sw + side * bw * 0.12;
+    var cy = sy / sw - bh * 0.1;
+    var rx = bw * 0.95, ry = bh * 0.72;
+    var tilt = side * -0.42;
+    var cos = Math.cos(tilt), sin = Math.sin(tilt);
+    var innerX = side < 0 ? x1 : x0;
+    var topY = y0;
+    var skin = maskImg.skin ? maskAlpha(maskImg.skin).d : null;
+    var ex = ["lip", "eyelid-l", "eyelid-r"]
+      .filter(function (k) { return maskImg[k]; })
+      .map(function (k) { return maskAlpha(maskImg[k]).d; });
+
+    function smooth(e0, e1, v) {
+      var t = Math.min(1, Math.max(0, (v - e0) / (e1 - e0)));
+      return t * t * (3 - 2 * t);
+    }
+
+    var canvas = alphaCanvas(w, h, function (q) {
+      var x = q % w, y = (q - x) / w;
+      var dx = x - cx, dy = y - cy;
+      var u = (dx * cos + dy * sin) / rx;
+      var v = (-dx * sin + dy * cos) / ry;
+      var dist = Math.sqrt(u * u + v * v);
+
+      if (dist >= 1) return 0;
+
+      var a = 1 - smooth(0.4, 1, dist);
+      a *= smooth(topY - 90, topY + 10, y);
+      a *= smooth(0, 100, side < 0 ? innerX + 60 - x : x - (innerX - 60));
+
+      if (skin) a *= skin[q * 4 + 3] / 255;
+      for (var j = 0; j < ex.length && a; j++) {
+        a *= Math.max(0, 1 - ex[j][q * 4 + 3] / 128);
+      }
+      return Math.round(255 * a);
+    });
+
+    cheekCache[area] = { src: maskImg[area], canvas: canvas };
+    return canvas;
+  }
+
+  function softenHex(hex, amount) {
+    var r = parseInt(hex.substr(1, 2), 16);
+    var g = parseInt(hex.substr(3, 2), 16);
+    var b = parseInt(hex.substr(5, 2), 16);
+    function channel(v) {
+      return Math.round(v + (255 - v) * amount).toString(16).padStart(2, "0");
+    }
+    return "#" + channel(r) + channel(g) + channel(b);
+  }
+
+  function tint(ctx, mask, hex, mode, alpha, fade) {
+    if (mode === "shade") return shade(ctx, mask, hex, alpha);
     var w = ctx.canvas.width;
     var h = ctx.canvas.height;
     var off = document.createElement("canvas");
@@ -342,8 +360,7 @@
           CATEGORY_AREAS.eye.forEach(function (area) {
             colors.push({
               product_id: c.product_id, area: area, sim_hex: c.pan_hex,
-              layer: c.pan_index, blend_mode: c.blend_mode, opacity: c.opacity, pan_name: c.pan_name,
-              role: c.tone_role || "", zone: Object.prototype.hasOwnProperty.call(ROLE_ZONE, c.tone_role) ? ROLE_ZONE[c.tone_role] : ""
+              layer: c.pan_index, blend_mode: c.blend_mode, opacity: c.opacity, pan_name: c.pan_name
             });
           });
         });
@@ -400,27 +417,28 @@
         // 같은 영역에 승인 색이 여러 개면 layer 순서대로 겹칩니다(팔레트 조합 지원).
         // layer·blend_mode·opacity가 없는 기존 행은 기본 혼합 1회로 처리합니다.
         var rows = colors.filter(function (c) {
-          return c.product_id === pick.productId && (c.area === area || c.area === AREA_ALIAS[area]);
+          if (c.product_id !== pick.productId) return false;
+          if (c.area === area || c.area === AREA_ALIAS[area]) return true;
+          if (category === "eye" && (c.area === "eye" || (typeof c.area === "string" && c.area.indexOf("eyelid") === 0))) return true;
+          return false;
         }).map(function (c, i) { return { color: c, index: i }; });
-        // 팔레트 칸은 역할 순서(베이스 → … → 하이라이트), 그 밖에는 layer 순서
-        function order(c) { return c.role && ROLE_ORDER[c.role] !== undefined ? ROLE_ORDER[c.role] : 0; }
+        if ((!rows || !rows.length) && category === "eye") {
+          rows = colors.filter(function (c) {
+            return c.product_id === pick.productId && (c.area === "eye" || (typeof c.area === "string" && c.area.indexOf("eyelid") === 0));
+          }).map(function (c, i) { return { color: c, index: i }; });
+        }
         rows.sort(function (a, b) {
-          return order(a.color) - order(b.color) || (Number(a.color.layer) || 0) - (Number(b.color.layer) || 0) || a.index - b.index;
+          return (Number(a.color.layer) || 0) - (Number(b.color.layer) || 0) || a.index - b.index;
         });
         rows.forEach(function (entry) {
           var color = entry.color;
-          // 팔레트 칸은 역할에 맞는 영역 마스크에, 영역 마스크가 없으면 눈두덩 전체에 칠합니다.
-          var maskKey = color.zone && maskImg[area + "-" + color.zone] ? area + "-" + color.zone : area;
-          if (!maskImg[maskKey]) return;
-          var maskSrc = category === "base" && maskKey === "skin" ? baseMask(maskImg, base) : maskImg[maskKey];
+          if (!maskImg[area]) return;
           var steps = color.blend_mode && color.opacity
             ? [{ mode: color.blend_mode, alpha: Number(color.opacity) }]
-            : color.role && ROLE_STEP[color.role] ? [ROLE_STEP[color.role]] : defaults(category, pick.row);
-          // simulation-colors.csv의 gloss 칸이 채워져 있으면 그 값을, 없으면 제형별 초기 설정을 씁니다(립).
-          var glossKeep = color.gloss !== undefined && color.gloss !== "" ? Number(color.gloss)
-            : (category === "lip" ? lipGloss(pick.row) : (category === "base" ? baseGloss(pick.row) : undefined));
-          steps.forEach(function (s) { tint(ctx, maskSrc, color.sim_hex, s.mode, s.alpha, s.fade, s.gloss !== undefined ? glossKeep : undefined); });
-          done.push({ area: maskKey, hex: color.sim_hex.toUpperCase(), layer: Number(color.layer) || 0, pan: color.pan_name || "", gloss: category === "lip" || category === "base" ? glossKeep : undefined });
+            : defaults(category, pick.row);
+          var maskSrc = category === "cheek" ? cheekMask(maskImg, area) : category === "eye" ? (function(){ var c2=document.createElement('canvas'); c2.width=ctx.canvas.width; c2.height=ctx.canvas.height; var o2=c2.getContext('2d'); o2.drawImage(maskImg[area],0,0); var m2=o2.getImageData(0,0,c2.width,c2.height); var d2=m2.data; for(var ii=3;ii<d2.length;ii+=4){ if(d2[ii]>0){ var na=Math.min(255, d2[ii]*1.12); d2[ii]=na; }} o2.putImageData(m2,0,0); return c2; })() : maskImg[area];
+          steps.forEach(function (s) { tint(ctx, maskSrc, category === "eye" ? "#F4DCE4" : category === "cheek" ? softenHex(color.sim_hex, 0.25) : color.sim_hex, s.mode, (category === "eye" ? Math.min(0.10, s.alpha * 0.20) : s.alpha), s.fade); });
+          done.push({ area: area, hex: color.sim_hex.toUpperCase(), layer: Number(color.layer) || 0, pan: color.pan_name || "" });
         });
       });
       if (done.length) {
@@ -428,7 +446,7 @@
         done.forEach(function (d) { if (hexes.indexOf(d.hex) < 0) hexes.push(d.hex); });
         applied[category] = {
           productId: pick.productId, hex: hexes[0], hexes: hexes,
-          areas: done.map(function (d) { return d.area; }), layers: done.length, gloss: done[0].gloss,
+          areas: done.map(function (d) { return d.area; }), layers: done.length,
           pans: done.map(function (d) { return d.pan; }).filter(Boolean)
         };
         tileInfo[category] = {
@@ -441,15 +459,6 @@
         tileInfo[category] = { state: "no-color", text: "색상 검수 전 · 적용 안 함" };
       }
     });
-    // 고객 화면: 색값(HEX)·검수 상태 대신 적용 여부만 보여 줍니다. 원래 문구는 data-dev-text에 남깁니다(?view=dev면 원래 문구).
-    var customer = window.MoodieDataMode ? window.MoodieDataMode.isCustomer : true;
-    var CUSTOMER_TILE = { applied: "메이크업 적용", "no-color": "미리보기 준비 안 됨", none: "선택 안 함" };
-    if (customer) {
-      Object.keys(tileInfo).forEach(function (c) {
-        tileInfo[c].devText = tileInfo[c].text;
-        tileInfo[c].text = CUSTOMER_TILE[tileInfo[c].state] || tileInfo[c].text;
-      });
-    }
     var appliedNames = Object.keys(applied).map(function (c) { return CATEGORY_LABEL[c]; });
     result.setAttribute("aria-label", "메이크업 색 합성 결과" + (appliedNames.length ? " (" + appliedNames.join(", ") + " 적용)" : " (적용된 색 없음)"));
     container.setAttribute("data-applied", JSON.stringify(applied));
@@ -466,16 +475,13 @@
     var zooms = el("ul", "sim__zooms");
     zooms.setAttribute("aria-label", "부위별 확대");
     ZOOM_ORDER.forEach(function (category) {
-      var tile = zoomTile(result, category, tileInfo[category].text, tileInfo[category].state);
-      if (tileInfo[category].devText) tile.setAttribute("data-dev-text", tileInfo[category].devText);
-      zooms.appendChild(tile);
+      zooms.appendChild(zoomTile(result, category, tileInfo[category].text, tileInfo[category].state));
     });
     container.appendChild(zooms);
-    container.appendChild(el("p", "sim__disclaimer", customer
-      ? "AI로 만든 가상 얼굴에 고른 제품의 색을 입혀 본 메이크업 미리보기예요. 실제 발색·질감·광택은 피부와 조명에 따라 다를 수 있어요."
-      : "AI로 만든 가상 인물의 얼굴 이미지 위에, 고른 셰이드의 표시용 색을 브라우저에서 합성한 시뮬레이션이에요. AI가 새로 그린 메이크업 사진이 아니며, " +
-        "얼굴 영역은 이 사진 한 장에 맞춰 미리 정해 두었어요. 실제 발색·질감·광택과 다를 수 있어요." +
-        (hashChecked ? "" : " (이 브라우저에서는 기준 이미지 확인을 건너뛰었어요)")));
+    container.appendChild(el("p", "sim__disclaimer",
+      "AI로 만든 가상 인물의 얼굴 이미지 위에, 고른 셰이드의 표시용 색을 브라우저에서 합성한 시뮬레이션이에요. AI가 새로 그린 메이크업 사진이 아니며, " +
+      "얼굴 영역은 이 사진 한 장에 맞춰 미리 정해 두었어요. 실제 발색·질감·광택과 다를 수 있어요." +
+      (hashChecked ? "" : " (이 브라우저에서는 기준 이미지 확인을 건너뛰었어요)")));
     status.hidden = true;
     return { applied: applied, tileInfo: tileInfo, hashChecked: hashChecked };
   }
