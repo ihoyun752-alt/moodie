@@ -10,9 +10,12 @@
   var COLORS_URL = "data/simulation-colors.csv";
   var MASKS_URL = "data/simulation-masks.csv";
   var PALETTE_URL = "data/palette-colors.csv";
-  var CATEGORY_AREAS = { lip: ["lip"], cheek: ["cheek-l", "cheek-r"], eye: ["eyelid-l", "eyelid-r"], base: ["skin"] };
+  // 베이스는 얼굴 전체(이마·얼굴 가장자리·목)를 덮는 skin-full 마스크에 칠합니다(2026-11-03).
+  // skin 마스크는 얼굴 안쪽 타원만 덮어 베이스 경계가 드러났습니다. skin은 치크 모양 계산에 그대로 씁니다.
+  var CATEGORY_AREAS = { lip: ["lip"], cheek: ["cheek-l", "cheek-r"], eye: ["eyelid-l", "eyelid-r"], base: ["skin-full"] };
   // 한 색상 행이 양쪽 영역에 함께 적용될 때 쓰는 별칭 (예: area=eyelid → 양 눈꺼풀)
-  var AREA_ALIAS = { "eyelid-l": "eyelid", "eyelid-r": "eyelid", "cheek-l": "cheek", "cheek-r": "cheek" };
+  // skin-full은 CSV의 area=skin 색상 행을 그대로 씁니다.
+  var AREA_ALIAS = { "eyelid-l": "eyelid", "eyelid-r": "eyelid", "cheek-l": "cheek", "cheek-r": "cheek", "skin-full": "skin" };
   var CATEGORY_LABEL = { lip: "립", cheek: "치크", eye: "아이섀도우", base: "베이스" };
   // 혼합 초기 설정 (docs/simulation-design.md 4절). 실제 발색값이 아니며 미승인 초기값입니다.
   // simulation-colors.csv의 blend_mode·opacity 칸이 채워져 있으면 그 값을 씁니다.
@@ -432,11 +435,13 @@
         });
         rows.forEach(function (entry) {
           var color = entry.color;
-          if (!maskImg[area]) return;
+          // skin-full 마스크가 없으면(예전 마스크 목록) 기존 skin 마스크로 칠합니다.
+          var areaMask = maskImg[area] || (area === "skin-full" ? maskImg.skin : null);
+          if (!areaMask) return;
           var steps = color.blend_mode && color.opacity
             ? [{ mode: color.blend_mode, alpha: Number(color.opacity) }]
             : defaults(category, pick.row);
-          var maskSrc = category === "cheek" ? cheekMask(maskImg, area) : category === "eye" ? (function(){ var c2=document.createElement('canvas'); c2.width=ctx.canvas.width; c2.height=ctx.canvas.height; var o2=c2.getContext('2d'); o2.drawImage(maskImg[area],0,0); var m2=o2.getImageData(0,0,c2.width,c2.height); var d2=m2.data; for(var ii=3;ii<d2.length;ii+=4){ if(d2[ii]>0){ var na=Math.min(255, d2[ii]*1.12); d2[ii]=na; }} o2.putImageData(m2,0,0); return c2; })() : maskImg[area];
+          var maskSrc = category === "cheek" ? cheekMask(maskImg, area) : category === "eye" ? (function(){ var c2=document.createElement('canvas'); c2.width=ctx.canvas.width; c2.height=ctx.canvas.height; var o2=c2.getContext('2d'); o2.drawImage(maskImg[area],0,0); var m2=o2.getImageData(0,0,c2.width,c2.height); var d2=m2.data; for(var ii=3;ii<d2.length;ii+=4){ if(d2[ii]>0){ var na=Math.min(255, d2[ii]*1.12); d2[ii]=na; }} o2.putImageData(m2,0,0); return c2; })() : areaMask;
           steps.forEach(function (s) { tint(ctx, maskSrc, category === "eye" ? "#F4DCE4" : category === "cheek" ? softenHex(color.sim_hex, 0.25) : color.sim_hex, s.mode, (category === "eye" ? Math.min(0.10, s.alpha * 0.20) : s.alpha), s.fade); });
           done.push({ area: area, hex: color.sim_hex.toUpperCase(), layer: Number(color.layer) || 0, pan: color.pan_name || "" });
         });

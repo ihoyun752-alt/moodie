@@ -13,3 +13,4 @@ MK-0011,assets/simulation/base-face.png,9d298923a13569b63f5d3b809aee7d3bd646be5b
 MK-0012,assets/simulation/base-face.png,9d298923a13569b63f5d3b809aee7d3bd646be5b56f15c849210abff995b2673,eyelid-r-crease,assets/simulation/masks/eyelid-r-crease.png,3,Claude 육안 확인 (eyelid-r에서 파생 · 담당자 확인 필요),2026-11-02
 MK-0013,assets/simulation/base-face.png,9d298923a13569b63f5d3b809aee7d3bd646be5b56f15c849210abff995b2673,eyelid-r-outer,assets/simulation/masks/eyelid-r-outer.png,3,Claude 육안 확인 (eyelid-r에서 파생 · 담당자 확인 필요),2026-11-02
 MK-0014,assets/simulation/base-face.png,9d298923a13569b63f5d3b809aee7d3bd646be5b56f15c849210abff995b2673,eyelid-r-inner,assets/simulation/masks/eyelid-r-inner.png,3,Claude 육안 확인 (eyelid-r에서 파생 · 담당자 확인 필요),2026-11-02
+MK-0015,assets/simulation/base-face.png,9d298923a13569b63f5d3b809aee7d3bd646be5b56f15c849210abff995b2673,skin-full,assets/simulation/masks/skin-full.png,5,Claude 생성 (피부색 분할 + skin.png 눈·입·코 구멍 + 눈썹 제외 · 베이스 전용 · 담당자 확인 필요),2026-11-03
