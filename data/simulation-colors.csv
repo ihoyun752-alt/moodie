@@ -15,5 +15,23 @@ MD-0013-01,cheek-l,#E39D9E,swatch-measured,docs/reference/official-swatches/losy
 MD-0013-01,cheek-r,#E39D9E,swatch-measured,docs/reference/official-swatches/losykim/vol-mellow-02-mellow-swatch.jpg,"(400,450)-(650,700)",color,0.85,,,,approved,사용자 지시 (색상 검토 확인),2026-11-02
 MD-0013-02,cheek-l,#D18182,swatch-measured,docs/reference/official-swatches/losykim/vol-mellow-blushing-serum-chart.jpg,"(120,1530)-(210,1610)",color,0.85,,,,approved,사용자 지시 (색상 검토 확인),2026-11-02
 MD-0013-02,cheek-r,#D18182,swatch-measured,docs/reference/official-swatches/losykim/vol-mellow-blushing-serum-chart.jpg,"(120,1530)-(210,1610)",color,0.85,,,,approved,사용자 지시 (색상 검토 확인),2026-11-02
-MD-0012-03,lip,#DC9B9A,ai-image-estimate,assets/products/losykim/MD-0012-03.png,,,,,,,approved,담당자 지시 (AI 제품 이미지 추정값 · 공식 HEX 아님),2026-11-02
+MD-0012-03,lip,#D89D9D,swatch-measured,docs/reference/official-swatches/losykim/pdrn-lip-lace.jpg,"(12,12)-(37,37)",multiply,0.5,,,,approved,담당자 지시 (공식 10 레이스 스와치 재측정 · 진하게 보이도록 multiply 0.5),2026-11-03
 MD-0028-01,skin,#FEE2CC,ai-image-estimate,assets/products/aprilskin/MD-0028.png,"(400,190)-(470,260)",,,,,,approved,담당자 지시 (estimated · AI 제품 이미지 바른 자국 추정값 · 공식 HEX 아님),2026-11-02
+MD-0026-01,skin,#FEEAD9,swatch-measured,docs/reference/official-swatches/clio/kc-01.jpg,"(590,10440)-(690,10480)",shade,0.35,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0026-02,skin,#F8DCC4,swatch-measured,docs/reference/official-swatches/clio/kc-01.jpg,"(590,10860)-(690,10900)",shade,0.35,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0023-01,skin,#FBE3D5,swatch-measured,docs/reference/official-swatches/vdl/expert-fit-detail.jpg,"(125,7925)-(195,7960)",shade,0.35,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0025-01,skin,#F1D5C0,swatch-measured,docs/reference/official-swatches/espoir/bvf-e15.jpg,"(240,2575)-(310,2605)",shade,0.35,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0025-02,skin,#EFD6BC,swatch-measured,docs/reference/official-swatches/espoir/bvf-e15.jpg,"(610,2715)-(680,2745)",shade,0.35,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0024-01,skin,#F6E9E1,swatch-measured,docs/reference/official-swatches/abouttone/slf-d1654.jpg,"(110,900)-(300,1010)",shade,0.35,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0024-02,skin,#F0DCD1,swatch-measured,docs/reference/official-swatches/abouttone/slf-d1654.jpg,"(110,1220)-(300,1330)",shade,0.35,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0024-03,skin,#F3E1D2,swatch-measured,docs/reference/official-swatches/abouttone/slf-d1654.jpg,"(390,900)-(580,1010)",shade,0.35,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0014-01,cheek-l,#FEACAE,swatch-measured,docs/reference/official-swatches/amuse/dsb-x8.jpg,"(290,160)-(355,290)",color,0.85,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0014-01,cheek-r,#FEACAE,swatch-measured,docs/reference/official-swatches/amuse/dsb-x8.jpg,"(290,160)-(355,290)",color,0.85,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0015-01,cheek-l,#D99B90,swatch-measured,docs/reference/official-swatches/lilybyred/lbc-d2.jpg,"(720,2470)-(830,2540)",color,0.85,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0015-01,cheek-r,#D99B90,swatch-measured,docs/reference/official-swatches/lilybyred/lbc-d2.jpg,"(720,2470)-(830,2540)",color,0.85,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0015-02,cheek-l,#C7947C,swatch-measured,docs/reference/official-swatches/lilybyred/lbc-d2.jpg,"(700,10650)-(820,10720)",shade,0.5,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0015-02,cheek-r,#C7947C,swatch-measured,docs/reference/official-swatches/lilybyred/lbc-d2.jpg,"(700,10650)-(820,10720)",shade,0.5,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0019-01,cheek-l,#90414F,swatch-measured,docs/reference/official-swatches/hince/dlc-3.jpg,"(560,3640)-(680,3710)",color,0.85,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0019-01,cheek-r,#90414F,swatch-measured,docs/reference/official-swatches/hince/dlc-3.jpg,"(560,3640)-(680,3710)",color,0.85,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0019-02,cheek-l,#F69970,swatch-measured,docs/reference/official-swatches/hince/dlc-3.jpg,"(260,3650)-(370,3720)",color,0.85,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
+MD-0019-02,cheek-r,#F69970,swatch-measured,docs/reference/official-swatches/hince/dlc-3.jpg,"(260,3650)-(370,3720)",color,0.85,,,,approved,담당자 (1차 승인 검토 · 공식 이미지 측정),2026-11-03
