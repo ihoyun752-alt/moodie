@@ -292,7 +292,7 @@
         if (simBox && window.MoodieSimulation) {
           var job = window.MoodieSimulation.render(simBox, wanted.map(function (w) {
             return { category: w.category, productId: w.id, row: w.id ? byId[w.id] || null : null };
-          }));
+          }), { mood: mood });
           if (job && job.catch) {
             job.catch(function () { status.hidden = false; status.textContent = "시뮬레이션 일부를 표시하지 못했어요. 제품 정보는 위 카드와 같아요."; });
           }

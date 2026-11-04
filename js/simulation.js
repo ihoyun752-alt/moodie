@@ -20,6 +20,36 @@
   // 혼합 초기 설정 (docs/simulation-design.md 4절). 실제 발색값이 아니며 미승인 초기값입니다.
   // simulation-colors.csv의 blend_mode·opacity 칸이 채워져 있으면 그 값을 씁니다.
   var ORDER = ["base", "cheek", "eye", "lip"]; // 베이스 → 치크 → 아이 → 립
+
+  // ---------- 무드별 아이 표현 (2026-11-04) ----------
+  // LOVELY는 여기 넣지 않습니다 → 기존 눈꺼풀 코드(고정 연핑크)를 그대로 씁니다.
+  // 색은 항상 승인된 팔레트 칸 색(palette-colors.csv)이고, 무드 설정은 영역·불투명도만 정합니다.
+  // 영역 이름은 eyelid-<l|r>-<lid|crease|outer|inner> 마스크(MK-0007~0014)입니다.
+  var EYE_STYLE = {
+    pure: { alpha: 0.25, roles: { base: ["lid"] } },
+    nude: { alpha: 0.35, roles: { base: ["lid"], mid: ["crease"] } },
+    modern: { alpha: 0.35, roles: { base: ["lid"], mid: ["crease"], shade: ["outer"] } },
+    chic: { alpha: 0.45, roles: { base: ["lid"], mid: ["crease"], shade: ["outer"] } },
+    glam: { alpha: 0.55, roles: { base: ["lid"], mid: ["crease"], shade: ["outer"], point: ["lid", "inner"] } },
+    hip: { alpha: 0.5, roles: { mid: ["lid"], shade: ["outer", "crease"], point: ["inner"] } }
+  };
+  var ROLE_ORDER = ["base", "mid", "shade", "point"];
+  var ROLE_WEIGHT = { base: 0.6, mid: 0.8, shade: 1.0, point: 0.7 };
+  var ROLE_MODE = { base: "soft-light", mid: "multiply", shade: "multiply", point: "screen" };
+  var ROLE_LABEL = { base: "베이스", mid: "중간", shade: "음영", point: "포인트" };
+  // 아이라인: 팔레트의 공식 matte 칸 중 밝기 130 미만인 가장 어두운 칸. LOVELY는 넣지 않음(아이라인 없음).
+  // from: 라인이 시작하는 위치(0 = 눈 앞머리, 1 = 눈꼬리), emphasis: 눈꼬리 쪽 강조, wing: 꼬리 길이 비율(0~1)
+  var LINER_STYLE = {
+    pure: { alpha: 0.18, from: 0, emphasis: 0, wing: 0 },
+    nude: { alpha: 0.28, from: 0, emphasis: 0, wing: 0 },
+    modern: { alpha: 0.38, from: 0, emphasis: 0.6, wing: 0.35 },
+    chic: { alpha: 0.5, from: 0.33, emphasis: 0.4, wing: 0.65 },
+    glam: { alpha: 0.55, from: 0, emphasis: 0.5, wing: 1 },
+    hip: { alpha: 0.5, from: 0.5, emphasis: 0.3, wing: 1 }
+  };
+  var LINER_MAX_LIGHTNESS = 130;
+  // 애교살: 7개 무드 공통. 공식 matte 칸 중 밝기 195 이상인 가장 밝은 칸만 사용, 없으면 칠하지 않음.
+  var AEGYO = { areas: ["aegyo-l", "aegyo-r"], mode: "soft-light", alpha: 0.25, minLightness: 195 };
   // shade: 영역의 명암(주름·광택)은 비율로 유지하고, 영역 평균 밝기를 제품 색에 맞추는 픽셀 단위 합성.
   //        캔버스 'color' 혼합은 원래 밝기를 그대로 둬서 진한 립(예: 딥 레드)이 실제보다 밝게 보여 바꿨습니다.
   //        원래 밝은 반사광(광택)은 덮지 않고 살려 색이 평평하게 칠해진 느낌을 줄입니다.
@@ -313,6 +343,210 @@
     ctx.restore();
   }
 
+  // ---------- 무드별 아이 표현 · 아이라인 · 애교살 (2026-11-04) ----------
+  function hexLightness(hex) {
+    var r = parseInt(hex.substr(1, 2), 16);
+    var g = parseInt(hex.substr(3, 2), 16);
+    var b = parseInt(hex.substr(5, 2), 16);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+
+  function productPans(pans, productId) {
+    return pans.filter(function (p) { return p.product_id === productId; });
+  }
+
+  // tone_role이 기록된 칸만 역할로 씁니다. 0030-01처럼 예전 역할 이름(highlight·deep·accent)도 대응합니다.
+  function eyeRoles(list) {
+    function pickRole(names, darkest) {
+      var c = list.filter(function (p) { return names.indexOf(p.tone_role) >= 0; });
+      if (!c.length) return null;
+      c.sort(function (a, b) { return hexLightness(b.hex) - hexLightness(a.hex); });
+      return darkest ? c[c.length - 1] : c[0];
+    }
+    return {
+      base: pickRole(["base"]) || pickRole(["highlight"]),
+      mid: pickRole(["mid"]),
+      shade: pickRole(["deep"], true) || pickRole(["shade"], true),
+      point: pickRole(["point"]) || pickRole(["accent"])
+    };
+  }
+
+  function pickLiner(list) {
+    var c = list.filter(function (p) { return p.texture === "matte" && hexLightness(p.hex) < LINER_MAX_LIGHTNESS; });
+    c.sort(function (a, b) { return hexLightness(a.hex) - hexLightness(b.hex); });
+    return c[0] || null;
+  }
+
+  function pickAegyo(list) {
+    var c = list.filter(function (p) { return p.texture === "matte" && hexLightness(p.hex) >= AEGYO.minLightness; });
+    c.sort(function (a, b) { return hexLightness(b.hex) - hexLightness(a.hex); });
+    return c[0] || null;
+  }
+
+  // 마스크 알파에 x 위치별 가중치를 곱한 캔버스
+  function weightedMask(img, fn) {
+    var m = maskAlpha(img);
+    return alphaCanvas(m.w, m.h, function (p) {
+      var a = m.d[p * 4 + 3];
+      return a ? Math.round(a * Math.max(0, Math.min(1, fn(p % m.w)))) : 0;
+    });
+  }
+
+  // 마스크에서 다른 마스크 영역을 뺀 캔버스 (아이라인 자리에 눈꺼풀 색이 겹치지 않게)
+  function cutMask(img, cuts, w, h) {
+    var c = document.createElement("canvas");
+    c.width = w;
+    c.height = h;
+    var o = c.getContext("2d");
+    o.drawImage(img, 0, 0, w, h);
+    o.globalCompositeOperation = "destination-out";
+    cuts.forEach(function (k) { if (k) o.drawImage(k, 0, 0, w, h); });
+    return c;
+  }
+
+  function maskBox(img) {
+    var m = maskAlpha(img);
+    var x0 = m.w, x1 = -1;
+    for (var p = 0; p < m.w * m.h; p++) {
+      if (m.d[p * 4 + 3] > 20) {
+        var x = p % m.w;
+        if (x < x0) x0 = x;
+        if (x > x1) x1 = x;
+      }
+    }
+    return { x0: x0, x1: x1 };
+  }
+
+  function smoothStep(e0, e1, v) {
+    if (e1 === e0) return v >= e1 ? 1 : 0;
+    var t = Math.min(1, Math.max(0, (v - e0) / (e1 - e0)));
+    return t * t * (3 - 2 * t);
+  }
+
+  // 무드별 아이라인 마스크 (좌우). 왼쪽 눈은 x가 작은 쪽, 오른쪽 눈은 x가 큰 쪽이 눈꼬리입니다.
+  function linerMasks(maskImg, style) {
+    var out = [];
+    ["l", "r"].forEach(function (s) {
+      var line = maskImg["liner-" + s];
+      if (!line) return;
+      var b = maskBox(line);
+      var outerX = s === "l" ? b.x0 : b.x1;
+      var innerX = s === "l" ? b.x1 : b.x0;
+      var span = Math.max(1, Math.abs(outerX - innerX));
+      out.push(weightedMask(line, function (x) {
+        var t = Math.abs(x - innerX) / span; // 0 앞머리 → 1 눈꼬리
+        var start = style.from > 0 ? smoothStep(style.from - 0.08, style.from + 0.08, t) : 1;
+        return start * ((1 - style.emphasis * 0.5) + style.emphasis * 0.5 * smoothStep(0.5, 1, t));
+      }));
+      var wing = maskImg["liner-wing-" + s];
+      if (wing && style.wing > 0) {
+        var wb = maskBox(wing);
+        var len = Math.max(1, wb.x1 - wb.x0);
+        var corner = s === "l" ? wb.x1 : wb.x0;
+        out.push(weightedMask(wing, function (x) {
+          var d = Math.abs(x - corner) / len;
+          return 1 - smoothStep(style.wing - 0.2, style.wing, d);
+        }));
+      }
+    });
+    return out;
+  }
+
+  function paintEyeByMood(ctx, maskImg, colors, pans, pick, mood, applied, tileInfo) {
+    var style = EYE_STYLE[mood];
+    var w = ctx.canvas.width;
+    var h = ctx.canvas.height;
+    var list = productPans(pans, pick.productId);
+    var single = null;
+    if (!list.length) {
+      // 팔레트 칸이 없는 단일 색 제품(예: 0034-01)은 승인 색 1개를 베이스로 봅니다.
+      single = colors.filter(function (c) {
+        return c.product_id === pick.productId && !c.pan_name && typeof c.area === "string" &&
+          (c.area === "eye" || c.area.indexOf("eyelid") === 0);
+      })[0] || null;
+    }
+    var roles = single
+      ? { base: { hex: single.sim_hex.toUpperCase(), name: "", blend_mode: single.blend_mode, opacity: single.opacity }, mid: null, shade: null, point: null }
+      : eyeRoles(list);
+    var linerStyle = LINER_STYLE[mood];
+    var linerPan = linerStyle ? pickLiner(list) : null;
+    var linerCuts = linerPan ? linerMasks(maskImg, linerStyle) : [];
+    var record = { productId: pick.productId, mood: mood, roles: {}, hexes: [], areas: [], layers: 0 };
+
+    ROLE_ORDER.forEach(function (role) {
+      var pan = roles[role];
+      var areas = style.roles[role];
+      if (!pan || !areas) return;
+      var mode = pan.blend_mode || ROLE_MODE[role];
+      var alpha = Math.min(1, style.alpha * ROLE_WEIGHT[role] * (pan.opacity ? Number(pan.opacity) : 1));
+      var painted = [];
+      ["l", "r"].forEach(function (s) {
+        areas.forEach(function (a) {
+          var name = "eyelid-" + s + "-" + a;
+          if (!maskImg[name]) return;
+          var m = linerCuts.length ? cutMask(maskImg[name], linerCuts, w, h) : maskImg[name];
+          tint(ctx, m, pan.hex, mode, alpha, a === "lid" || a === "crease" ? 0.65 : 0);
+          painted.push(name);
+        });
+      });
+      if (painted.length) {
+        record.roles[role] = { hex: pan.hex, name: pan.name || "", areas: painted, mode: mode, alpha: Math.round(alpha * 1000) / 1000 };
+        if (record.hexes.indexOf(pan.hex) < 0) record.hexes.push(pan.hex);
+        record.areas = record.areas.concat(painted);
+        record.layers += painted.length;
+      }
+    });
+
+    var notes = [];
+    if (linerStyle) {
+      if (linerPan) {
+        linerCuts.forEach(function (m) { tint(ctx, m, linerPan.hex, "multiply", linerStyle.alpha, 0); });
+        record.liner = { hex: linerPan.hex, name: linerPan.name, alpha: linerStyle.alpha, wing: linerStyle.wing };
+        notes.push("아이라인 " + linerPan.hex);
+      } else {
+        record.liner = { skipped: "공식 매트 어두운 칸 없음" };
+        notes.push("아이라인 미적용(공식 매트 어두운 칸 없음)");
+      }
+    }
+
+    if (record.layers) {
+      record.hex = record.hexes[0];
+      record.pans = ROLE_ORDER.filter(function (r) { return record.roles[r]; }).map(function (r) { return record.roles[r].name; }).filter(Boolean);
+      applied.eye = record;
+      tileInfo.eye = {
+        state: "applied",
+        text: ROLE_ORDER.filter(function (r) { return record.roles[r]; }).map(function (r) {
+          return ROLE_LABEL[r] + " " + record.roles[r].hex;
+        }).join(" · ") + " 적용" + (notes.length ? " · " + notes.join(" · ") : "")
+      };
+    } else {
+      tileInfo.eye = { state: "no-color", text: (list.length ? "역할 미지정 · 적용 안 함" : "색상 검수 전 · 적용 안 함") };
+    }
+    paintAegyo(ctx, maskImg, pans, pick, applied, tileInfo, true);
+  }
+
+  // 애교살: 7개 무드 공통 규칙. showSkip이 false(기존 LOVELY 경로)면 칠하지 못할 때 기록·문구를 바꾸지 않습니다.
+  function paintAegyo(ctx, maskImg, pans, pick, applied, tileInfo, showSkip) {
+    var pan = pickAegyo(productPans(pans, pick.productId));
+    if (!pan) {
+      if (showSkip && applied.eye) applied.eye.aegyo = { skipped: "공식 매트 밝은 칸 없음" };
+      if (showSkip && tileInfo.eye && tileInfo.eye.state === "applied") tileInfo.eye.text += " · 애교살 미적용(공식 매트 밝은 칸 없음)";
+      return;
+    }
+    var painted = [];
+    AEGYO.areas.forEach(function (a) {
+      if (!maskImg[a]) return;
+      tint(ctx, maskImg[a], pan.hex, AEGYO.mode, AEGYO.alpha, 0);
+      painted.push(a);
+    });
+    if (!painted.length) return;
+    var info = { hex: pan.hex, name: pan.name, alpha: AEGYO.alpha, areas: painted };
+    if (applied.eye) applied.eye.aegyo = info;
+    else applied.eye = { productId: pick.productId, aegyo: info, hexes: [], areas: [], layers: 0 };
+    if (tileInfo.eye && tileInfo.eye.state === "applied") tileInfo.eye.text += " · 애교살 " + pan.hex;
+    else tileInfo.eye = { state: "applied", text: "애교살 " + pan.hex + " 적용" };
+  }
+
   // 사진 위에 붙는 라벨 ("메이크업 전" / "추천 제품으로 완성한 메이크업")
   function figure(title, canvas, accent) {
     var fig = el("figure", "sim__figure");
@@ -347,7 +581,9 @@
   }
 
   // picks: [{ category, productId, row }] (row = products 행, 없으면 null)
-  function render(container, picks) {
+  // opts.mood: 결과 페이지의 무드. 없으면 기존 방식(LOVELY와 같은 경로)으로 그립니다.
+  function render(container, picks, opts) {
+    var mood = opts && typeof opts.mood === "string" ? opts.mood : "";
     container.textContent = "";
     container.hidden = false;
     var status = el("p", "sim__status", "시뮬레이션을 준비하는 중이에요…");
@@ -368,6 +604,15 @@
           });
         });
       }
+      // 무드별 아이 표현용: 승인된 팔레트 칸(칸당 1개, 역할·질감 포함). 위의 colors 목록과 별도로 보관합니다.
+      var pans = texts[2] ? records(texts[2]).filter(function (c) {
+        return c.status === "approved" && /^#[0-9a-f]{6}$/i.test(c.pan_hex);
+      }).map(function (c) {
+        return {
+          product_id: c.product_id, hex: c.pan_hex.toUpperCase(), name: c.pan_name || "",
+          tone_role: c.tone_role || "", texture: c.texture || "unknown"
+        };
+      }) : [];
       var masks = records(texts[1]);
       if (!masks.length) throw new Error("등록된 얼굴 마스크가 없음");
       var baseSrc = masks[0].base_image;
@@ -380,7 +625,7 @@
         return Promise.all([loadImage(baseSrc)].concat(areas.map(function (a) { return loadImage(maskByArea[a]); }))).then(function (imgs) {
           var maskImg = {};
           areas.forEach(function (a, i) { maskImg[a] = imgs[i + 1]; });
-          return draw(container, status, imgs[0], maskImg, colors, picks, actual === expected);
+          return draw(container, status, imgs[0], maskImg, colors, picks, actual === expected, mood, pans);
         });
       });
     }).catch(function (error) {
@@ -390,7 +635,8 @@
     });
   }
 
-  function draw(container, status, base, maskImg, colors, picks, hashChecked) {
+  function draw(container, status, base, maskImg, colors, picks, hashChecked, mood, pans) {
+    pans = pans || [];
     var w = base.naturalWidth;
     var h = base.naturalHeight;
     var original = el("canvas", "sim__canvas");
@@ -413,6 +659,11 @@
       var pick = picks.filter(function (p) { return p.category === category; })[0];
       if (!pick || !pick.productId) {
         tileInfo[category] = { state: "none", text: "선택 안 함 · 적용 안 함" };
+        return;
+      }
+      // PURE~HIP: 무드별 역할·영역으로 칠하는 새 경로 (LOVELY는 EYE_STYLE에 없어 아래 기존 코드 사용)
+      if (category === "eye" && EYE_STYLE[mood]) {
+        paintEyeByMood(ctx, maskImg, colors, pans, pick, mood, applied, tileInfo);
         return;
       }
       var done = [];
@@ -463,6 +714,8 @@
       } else {
         tileInfo[category] = { state: "no-color", text: "색상 검수 전 · 적용 안 함" };
       }
+      // 기존 경로(LOVELY 등)에도 공통 애교살을 더합니다. 공식 matte 칸이 없으면 아무것도 바꾸지 않습니다.
+      if (category === "eye") paintAegyo(ctx, maskImg, pans, pick, applied, tileInfo, false);
     });
     var appliedNames = Object.keys(applied).map(function (c) { return CATEGORY_LABEL[c]; });
     result.setAttribute("aria-label", "메이크업 색 합성 결과" + (appliedNames.length ? " (" + appliedNames.join(", ") + " 적용)" : " (적용된 색 없음)"));
